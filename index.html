@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Regify • Minecraft PvP Network Optimizer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .logo-font {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .hero-bg {
+      background: radial-gradient(circle at 50% 20%, rgba(59, 130, 246, 0.18) 0%, transparent 60%);
+    }
+
+    .card-hover {
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .card-hover:hover {
+      transform: translateY(-15px) scale(1.02);
+      box-shadow: 0 30px 60px -15px rgb(59 130 246 / 0.25);
+    }
+
+    .glow-blue {
+      text-shadow: 0 0 40px rgba(59, 130, 246, 0.7);
+    }
+
+    .scan-line {
+      animation: scan 5s linear infinite;
+    }
+
+    @keyframes scan {
+      0% { transform: translateY(-150%); }
+      100% { transform: translateY(1200%); }
+    }
+
+    .btn-press {
+      transition: transform 0.1s ease;
+    }
+    .btn-press:active {
+      transform: scale(0.95);
+    }
+
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: #3b82f6;
+      border-radius: 50%;
+      animation: floatParticle 15s linear infinite;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body class="bg-zinc-950 text-white overflow-x-hidden">
+
+  <!-- Navbar -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-zinc-950/90 backdrop-blur-xl border-b border-zinc-800">
+    <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <img src="logo.png" alt="Regify Logo" class="w-10 h-10 object-contain">
+        <div>
+          <span class="text-3xl font-bold logo-font tracking-tighter">Regify</span>
+          <span class="text-xs text-blue-400 block -mt-1">v4.0</span>
+        </div>
+      </div>
+
+      <div class="hidden md:flex items-center gap-8 text-sm font-medium">
+        <a href="#features" class="hover:text-blue-400 transition-colors">Features</a>
+        <a href="#presets" class="hover:text-blue-400 transition-colors">Presets</a>
+        <a href="#updates" class="hover:text-blue-400 transition-colors">Updates</a>
+        <a href="#guide" class="hover:text-blue-400 transition-colors">Guide</a>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <a href="https://discord.gg/5VTp4B9mx" target="_blank"
+           class="flex items-center gap-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 hover:border-blue-500 px-5 py-2.5 rounded-2xl text-sm transition-all">
+          <i class="fa-brands fa-discord text-blue-400"></i>
+          <span>Join Discord</span>
+        </a>
+        <a href="https://drive.usercontent.google.com/download?id=10I-hQoXrDdFFkho7_tAjjNdhKrN14MHY&export=download&authuser=0" target="_blank"
+           class="bg-blue-600 hover:bg-blue-500 transition-all px-6 py-3 rounded-2xl font-semibold flex items-center gap-2 text-sm btn-press">
+          <i class="fa-solid fa-download"></i>
+          Download
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero-bg min-h-screen flex items-center pt-20 relative overflow-hidden">
+    <div id="particles" class="absolute inset-0 pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+      <div class="space-y-8 z-10">
+        <div class="inline-flex items-center gap-2 bg-zinc-900 border border-blue-500/30 rounded-full px-6 py-2 text-sm">
+          <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+          Minecraft PvP Network Optimizer
+        </div>
+
+        <h1 class="text-6xl md:text-7xl font-bold logo-font tracking-tighter leading-none glow-blue">
+          Hitreg.<br>Latency.<br><span class="text-blue-500">Dominance.</span>
+        </h1>
+
+        <p class="text-xl text-zinc-400 max-w-lg">
+          Advanced Windows TCP/IP tweaks engineered for competitive Minecraft PvP. 
+          Get smoother hits and lower ping instantly.
+        </p>
+
+        <div class="flex flex-wrap gap-4">
+          <a href="https://drive.usercontent.google.com/download?id=10I-hQoXrDdFFkho7_tAjjNdhKrN14MHY&export=download&authuser=0" target="_blank"
+             class="bg-white text-black hover:bg-zinc-100 transition-all px-10 py-5 rounded-3xl font-semibold text-lg flex items-center gap-3 btn-press">
+            <i class="fa-solid fa-download"></i>
+            Download Regify v4.0
+          </a>
+          <a href="https://www.youtube.com/channel/UCYvj3SoGMbj-KiaIGf9kxoQ" target="_blank"
+             class="border border-zinc-700 hover:border-red-500 hover:text-red-400 transition-all px-8 py-5 rounded-3xl font-medium flex items-center gap-3">
+            <i class="fa-brands fa-youtube"></i>
+            Watch Tutorials
+          </a>
+        </div>
+
+        <div class="flex gap-8 text-sm pt-4">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-shield-halved text-green-500"></i>
+            <span>Admin Required</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-bolt-lightning text-yellow-500"></i>
+            <span>Instant Apply</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- App Preview -->
+      <div class="relative hidden md:block z-10">
+        <div class="bg-zinc-900 border border-zinc-700 rounded-3xl overflow-hidden shadow-2xl">
+          <div class="bg-zinc-950 px-6 py-4 flex items-center justify-between border-b border-zinc-800">
+            <div class="flex gap-1.5">
+              <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+              <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+              <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+            </div>
+            <div class="text-xs text-zinc-500 font-mono">Regify v4.0 • Competitive</div>
+          </div>
+          
+          <div class="p-10 bg-[#0a0a0a] relative min-h-[380px]">
+            <div class="scan-line absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-blue-500 to-transparent"></div>
+            
+            <div class="space-y-8">
+              <div>
+                <div class="flex justify-between text-sm mb-2">
+                  <span class="text-zinc-400">Latency Aggressiveness</span>
+                  <span class="text-blue-400 font-semibold">94</span>
+                </div>
+                <div class="h-3 bg-zinc-800 rounded-3xl overflow-hidden">
+                  <div class="h-full w-[94%] bg-gradient-to-r from-blue-500 to-cyan-400 rounded-3xl"></div>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-6">
+                <div class="bg-zinc-950 border border-emerald-500/30 rounded-2xl p-6 text-center">
+                  <div class="text-emerald-400 text-4xl font-bold">ON</div>
+                  <div class="text-xs text-zinc-500 mt-1">TCP NoDelay</div>
+                </div>
+                <div class="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 text-center">
+                  <div class="text-4xl font-bold text-white">172</div>
+                  <div class="text-xs text-zinc-500 mt-1">Initial RTO (ms)</div>
+                </div>
+              </div>
+
+              <a href="https://drive.usercontent.google.com/download?id=10I-hQoXrDdFFkho7_tAjjNdhKrN14MHY&export=download&authuser=0" target="_blank"
+                 class="w-full block text-center bg-blue-600 hover:bg-blue-500 py-4 rounded-2xl font-semibold text-lg transition-all btn-press">
+                APPLY TWEAKS
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="absolute -bottom-4 -left-6 bg-zinc-900 border border-emerald-500 text-emerald-400 text-sm px-6 py-3 rounded-2xl shadow-xl flex items-center gap-2">
+          <i class="fa-solid fa-check-circle"></i>
+          <span>Hitreg Optimized</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section id="features" class="py-24 bg-zinc-900">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <h2 class="text-5xl font-bold logo-font tracking-tight">Built for Serious PvP</h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="card-hover bg-zinc-950 border border-zinc-800 rounded-3xl p-10">
+          <div class="text-5xl mb-6">⚡</div>
+          <h3 class="text-2xl font-semibold mb-3">Ultra-Low Latency Tweaks</h3>
+          <p class="text-zinc-400">Nagle's Algorithm off, immediate ACKs, reduced RTO, and more.</p>
+        </div>
+        <div class="card-hover bg-zinc-950 border border-zinc-800 rounded-3xl p-10">
+          <div class="text-5xl mb-6">🎛️</div>
+          <h3 class="text-2xl font-semibold mb-3">Custom + Preset Profiles</h3>
+          <p class="text-zinc-400">Save your own configs or use Survival, Balanced, Competitive, Ultra.</p>
+        </div>
+        <div class="card-hover bg-zinc-950 border border-zinc-800 rounded-3xl p-10">
+          <div class="text-5xl mb-6">🔄</div>
+          <h3 class="text-2xl font-semibold mb-3">One-Click Reset</h3>
+          <p class="text-zinc-400">Easily revert all changes back to Windows defaults.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Presets -->
+  <section id="presets" class="py-24">
+    <div class="max-w-7xl mx-auto px-6">
+      <h2 class="text-5xl font-bold logo-font tracking-tight text-center mb-16">Choose Your Style</h2>
+      <div class="grid md:grid-cols-4 gap-6">
+        <div class="bg-zinc-900 border border-zinc-800 hover:border-emerald-500/50 rounded-3xl p-8 card-hover">
+          <div class="text-5xl mb-4">🌿</div>
+          <h3 class="text-2xl font-semibold">Survival</h3>
+          <p class="text-emerald-400 text-sm">Stable • Casual</p>
+        </div>
+        <div class="bg-zinc-900 border border-blue-500 rounded-3xl p-8 card-hover relative">
+          <div class="absolute top-6 right-6 text-xs bg-blue-600 px-4 py-1 rounded-full">MOST POPULAR</div>
+          <div class="text-5xl mb-4">⚔️</div>
+          <h3 class="text-2xl font-semibold">PvP Balanced</h3>
+          <p class="text-blue-400 text-sm">Recommended All-Rounder</p>
+        </div>
+        <div class="bg-zinc-900 border border-zinc-800 hover:border-violet-500/50 rounded-3xl p-8 card-hover">
+          <div class="text-5xl mb-4">💎</div>
+          <h3 class="text-2xl font-semibold">Competitive</h3>
+          <p class="text-violet-400 text-sm">Low Latency Focus</p>
+        </div>
+        <div class="bg-zinc-900 border border-zinc-800 hover:border-orange-500/50 rounded-3xl p-8 card-hover">
+          <div class="text-5xl mb-4">🔥</div>
+          <h3 class="text-2xl font-semibold">Ultra Aggressive</h3>
+          <p class="text-orange-400 text-sm">Max Performance</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Updates -->
+  <section id="updates" class="py-24 bg-zinc-900">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-12">
+        <h2 class="text-5xl font-bold logo-font tracking-tight">What's New in v4.0</h2>
+        <p class="text-zinc-400 mt-4">Major improvements and stability fixes</p>
+      </div>
+
+      <div class="max-w-2xl mx-auto bg-zinc-950 border border-zinc-800 rounded-3xl p-10 space-y-8">
+        <div class="flex gap-6">
+          <div class="text-blue-400 font-mono text-sm w-20">v4.0</div>
+          <div>
+            <ul class="space-y-3 text-zinc-300">
+              <li class="flex items-start gap-3"><span class="text-green-500 mt-1">•</span> Brand new modern UI with smoother animations</li>
+              <li class="flex items-start gap-3"><span class="text-green-500 mt-1">•</span> Improved preset system & profile management</li>
+              <li class="flex items-start gap-3"><span class="text-green-500 mt-1">•</span> Better RSS, RSC, and IRQ handling</li>
+              <li class="flex items-start gap-3"><span class="text-green-500 mt-1">•</span> Enhanced console logging & real-time ping</li>
+              <li class="flex items-start gap-3"><span class="text-green-500 mt-1">•</span> Bug fixes & stability improvements</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Download CTA -->
+  <section id="download" class="py-28">
+    <div class="max-w-4xl mx-auto text-center px-6">
+      <h2 class="text-6xl font-bold logo-font tracking-tighter mb-6">Get the Edge Today</h2>
+      <p class="text-2xl text-zinc-400 mb-12">Download Regify v4.0 and start dominating your PvP servers.</p>
+
+      <a href="https://drive.usercontent.google.com/download?id=10I-hQoXrDdFFkho7_tAjjNdhKrN14MHY&export=download&authuser=0" target="_blank"
+         class="group inline-flex items-center gap-5 bg-white text-black hover:bg-zinc-100 transition-all duration-300 text-2xl font-semibold px-20 py-9 rounded-3xl shadow-2xl shadow-blue-500/30 btn-press">
+        <i class="fa-solid fa-download text-4xl group-active:rotate-12 transition-transform"></i>
+        <div class="text-left">
+          Download Regify v4.0
+          <div class="text-sm font-normal text-zinc-500">Version 4.0 • Windows</div>
+        </div>
+      </a>
+
+      <div class="mt-16 flex justify-center gap-8">
+        <a href="https://discord.gg/5VTp4B9mx" target="_blank" 
+           class="flex items-center gap-3 text-lg hover:text-blue-400 transition-colors">
+          <i class="fa-brands fa-discord text-3xl"></i>
+          <span>Join Discord Community</span>
+        </a>
+        <a href="https://www.youtube.com/channel/UCYvj3SoGMbj-KiaIGf9kxoQ" target="_blank"
+           class="flex items-center gap-3 text-lg hover:text-red-400 transition-colors">
+          <i class="fa-brands fa-youtube text-3xl"></i>
+          <span>Watch Tutorial</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Simple particle background
+    const particlesEl = document.getElementById('particles');
+    for(let i=0;i<40;i++){
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.top = `${Math.random()*100}%`;
+      p.style.left = `${Math.random()*100}%`;
+      p.style.width = `${2 + Math.random()*3}px`;
+      p.style.height = p.style.width;
+      p.style.animationDuration = `${5 + Math.random()*10}s`;
+      particlesEl.appendChild(p);
+    }
+  </script>
+
+</body>
+</html>
