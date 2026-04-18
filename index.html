@@ -3,320 +3,1787 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Regify • Minecraft PvP Network Optimizer</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Regify v5 • Minecraft PvP Network Optimizer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+    :root {
+      --bg:      #050508;
+      --bg2:     #0b0b12;
+      --bg3:     #111120;
+      --border:  rgba(255,255,255,0.07);
+      --border2: rgba(99,102,241,0.35);
+      --text:    #e8e8f0;
+      --muted:   #6b6b88;
+      --accent:  #6366f1;
+      --accent2: #818cf8;
+      --green:   #22d3a0;
+      --yellow:  #f59e0b;
+      --red:     #f43f5e;
+      --cyan:    #22d3ee;
+      --purple:  #a855f7;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Inter', sans-serif;
-    }
-    .logo-font {
-      font-family: 'Space Grotesk', sans-serif;
-    }
-
-    .hero-bg {
-      background: radial-gradient(circle at 50% 20%, rgba(59, 130, 246, 0.18) 0%, transparent 60%);
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
     }
 
-    .card-hover {
-      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .card-hover:hover {
-      transform: translateY(-15px) scale(1.02);
-      box-shadow: 0 30px 60px -15px rgb(59 130 246 / 0.25);
+    ::selection { background: rgba(99,102,241,0.4); }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.025;
+      pointer-events: none;
+      z-index: 9999;
     }
 
-    .glow-blue {
-      text-shadow: 0 0 40px rgba(59, 130, 246, 0.7);
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 0 40px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(5,5,8,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .nav-logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 800;
+      font-family: 'Syne', sans-serif;
+      letter-spacing: -1px;
+    }
+
+    .nav-wordmark {
+      font-family: 'Syne', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-version {
+      font-size: 10px;
+      color: var(--accent2);
+      background: rgba(99,102,241,0.12);
+      padding: 2px 8px;
+      border-radius: 20px;
+      border: 1px solid rgba(99,102,241,0.25);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 12px;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-ghost {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--border2);
+      background: rgba(99,102,241,0.08);
+    }
+
+    .btn-primary {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 20px;
+      background: var(--accent);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.12), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.5s;
+    }
+
+    .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
+    .btn-primary:hover::after { transform: translateX(100%); }
+    .btn-primary:active { transform: scale(0.97); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      padding-top: 64px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(99,102,241,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99,102,241,0.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+
+    .hero-bg-glow {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%);
+      top: 50%;
+      left: 30%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .hero-left {
+      padding: 80px 80px 80px 80px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: rgba(34,211,160,0.08);
+      border: 1px solid rgba(34,211,160,0.25);
+      border-radius: 4px;
+      font-size: 10px;
+      color: var(--green);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+
+    .pulse-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    .hero-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(52px, 5.5vw, 88px);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -3px;
+      margin-bottom: 28px;
+    }
+
+    .hero-title .line-accent { color: var(--accent2); }
+    .hero-title .line-muted { color: var(--muted); }
+
+    .hero-sub {
+      font-size: 13px;
+      line-height: 1.8;
+      color: var(--muted);
+      max-width: 440px;
+      margin-bottom: 44px;
+    }
+
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 56px;
+    }
+
+    .btn-download {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 32px;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 0 40px rgba(99,102,241,0.3);
+    }
+
+    .btn-download:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 60px rgba(99,102,241,0.5);
+    }
+
+    .btn-download:active { transform: scale(0.97); }
+
+    .btn-outline {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 28px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-outline:hover {
+      border-color: rgba(255,255,255,0.2);
+      color: var(--text);
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 40px;
+    }
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -1px;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .stat-divider {
+      width: 1px;
+      background: var(--border);
+      align-self: stretch;
+    }
+
+    /* ── HERO RIGHT (app mock) ── */
+    .hero-right {
+      padding: 80px 80px 80px 40px;
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .app-mock {
+      width: 100%;
+      max-width: 520px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.03);
+    }
+
+    .app-titlebar {
+      background: var(--bg);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .titlebar-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-r { background: #ff5f57; }
+    .dot-y { background: #febc2e; }
+    .dot-g { background: #28c840; }
+
+    .titlebar-text {
+      margin-left: auto;
+      margin-right: auto;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    .app-body {
+      display: flex;
+      height: 380px;
+    }
+
+    .app-sidebar {
+      width: 52px;
+      background: var(--bg);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px 0;
+      gap: 20px;
+    }
+
+    .sidebar-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .sidebar-icon.active {
+      background: rgba(99,102,241,0.2);
+      color: var(--accent2);
+    }
+
+    .app-content {
+      flex: 1;
+      padding: 20px;
+      overflow: hidden;
+      position: relative;
     }
 
     .scan-line {
-      animation: scan 5s linear infinite;
-    }
-
-    @keyframes scan {
-      0% { transform: translateY(-150%); }
-      100% { transform: translateY(1200%); }
-    }
-
-    .btn-press {
-      transition: transform 0.1s ease;
-    }
-    .btn-press:active {
-      transform: scale(0.95);
-    }
-
-    .particle {
       position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--accent), transparent);
+      animation: scanline 4s linear infinite;
+      opacity: 0.5;
+    }
+
+    @keyframes scanline {
+      0% { top: 0; }
+      100% { top: 100%; }
+    }
+
+    .mock-label {
+      font-size: 9px;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .mock-value-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .mock-big {
+      font-family: 'Syne', sans-serif;
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--green);
+      letter-spacing: -2px;
+    }
+
+    .mock-unit { font-size: 11px; color: var(--muted); }
+
+    .mock-sparkline {
+      width: 100%;
+      height: 48px;
+      margin-bottom: 20px;
+      border-radius: 6px;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    .mock-sparkline svg { width: 100%; height: 100%; }
+
+    .mock-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .mock-chip {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .mock-chip .cv {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .mock-chip .cv.on { color: var(--green); }
+    .mock-chip .cv.blue { color: var(--accent2); }
+    .mock-chip .cl { font-size: 9px; color: var(--muted); margin-top: 2px; }
+
+    .mock-bar-row {
+      margin-bottom: 14px;
+    }
+
+    .mock-bar-head {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+
+    .mock-bar-head span:first-child { font-size: 10px; color: var(--muted); }
+    .mock-bar-head span:last-child { font-size: 10px; color: var(--accent2); }
+
+    .mock-bar-track {
+      height: 4px;
+      background: var(--bg);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .mock-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      background: linear-gradient(to right, var(--accent), var(--cyan));
+    }
+
+    .mock-apply-btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background: linear-gradient(to right, var(--accent), var(--purple));
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      margin-top: 14px;
+    }
+
+    .floating-badge {
+      position: absolute;
+      bottom: -16px;
+      left: -20px;
+      background: var(--bg2);
+      border: 1px solid rgba(34,211,160,0.4);
+      border-radius: 10px;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+      color: var(--green);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      white-space: nowrap;
+    }
+
+    .floating-badge2 {
+      position: absolute;
+      top: -16px;
+      right: -20px;
+      background: var(--bg2);
+      border: 1px solid rgba(99,102,241,0.4);
+      border-radius: 10px;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+      color: var(--accent2);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      white-space: nowrap;
+    }
+
+    /* ── SECTIONS ── */
+    section { padding: 100px 80px; }
+
+    .section-label {
+      font-size: 10px;
+      color: var(--accent2);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 24px;
+      height: 1px;
+      background: var(--accent2);
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(36px, 3.5vw, 60px);
+      font-weight: 800;
+      letter-spacing: -2px;
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+
+    .section-sub {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 500px;
+    }
+
+    /* ── TICKER ── */
+    .ticker-wrap {
+      padding: 18px 0;
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .ticker {
+      display: inline-flex;
+      gap: 60px;
+      animation: ticker 30s linear infinite;
+    }
+
+    @keyframes ticker {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .ticker-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    .ticker-item .dot {
       width: 4px;
       height: 4px;
-      background: #3b82f6;
+      background: var(--accent);
       border-radius: 50%;
-      animation: floatParticle 15s linear infinite;
-      opacity: 0.6;
+    }
+
+    /* ── FEATURES GRID ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .feature-card {
+      background: var(--bg2);
+      padding: 40px;
+      transition: background 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--accent), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .feature-card:hover { background: var(--bg3); }
+    .feature-card:hover::before { opacity: 1; }
+
+    .feature-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      font-size: 18px;
+    }
+
+    .feature-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      letter-spacing: -0.3px;
+    }
+
+    .feature-desc {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .feature-tag {
+      display: inline-block;
+      margin-top: 16px;
+      font-size: 9px;
+      color: var(--accent2);
+      background: rgba(99,102,241,0.1);
+      border: 1px solid rgba(99,102,241,0.2);
+      padding: 3px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* ── PRESETS ── */
+    .presets-section { background: var(--bg2); }
+
+    .presets-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 60px;
+    }
+
+    .preset-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .preset-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .preset-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(255,255,255,0.12);
+    }
+
+    .preset-card:hover::after { opacity: 1; }
+
+    .preset-icon {
+      font-size: 28px;
+      margin-bottom: 16px;
+    }
+
+    .preset-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: -0.3px;
+    }
+
+    .preset-tag {
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .preset-desc {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .preset-badge {
+      position: absolute;
+      top: 16px; right: 16px;
+      font-size: 9px;
+      padding: 3px 8px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* ── CHANGELOG ── */
+    .changelog-section { background: var(--bg); }
+
+    .changelog-wrap {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 80px;
+      margin-top: 60px;
+    }
+
+    .changelog-sidebar {
+      position: sticky;
+      top: 80px;
+      align-self: start;
+    }
+
+    .version-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(168,85,247,0.15));
+      border: 1px solid rgba(99,102,241,0.3);
+      border-radius: 100px;
+      font-family: 'Syne', sans-serif;
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 20px;
+    }
+
+    .changelog-meta {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 24px;
+    }
+
+    .changelog-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .changelog-item {
+      display: flex;
+      gap: 14px;
+      padding: 16px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      transition: border-color 0.2s;
+    }
+
+    .changelog-item:hover { border-color: var(--border2); }
+
+    .changelog-bullet {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+      font-size: 9px;
+    }
+
+    .changelog-text {
+      font-size: 12px;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .changelog-text span {
+      display: block;
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* ── REGION PRESETS ── */
+    .region-section { background: var(--bg2); }
+
+    .region-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-top: 48px;
+    }
+
+    .region-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+
+    .region-card:hover {
+      border-color: rgba(99,102,241,0.4);
+      transform: translateY(-4px);
+    }
+
+    .region-flag { font-size: 28px; margin-bottom: 10px; }
+
+    .region-code {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .region-ping { font-size: 10px; color: var(--muted); margin-top: 4px; }
+
+    /* ── NEW FEATURES V5 ── */
+    .new-features { background: var(--bg); }
+
+    .new-features-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 60px;
+    }
+
+    .nf-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 32px;
+      display: flex;
+      gap: 20px;
+      transition: all 0.3s;
+    }
+
+    .nf-card:hover {
+      border-color: var(--border2);
+      transform: translateX(4px);
+    }
+
+    .nf-icon-wrap {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 20px;
+    }
+
+    .nf-content .nf-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      margin-bottom: 8px;
+    }
+
+    .nf-content .nf-desc {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .nf-new-pill {
+      display: inline-block;
+      font-size: 9px;
+      padding: 2px 8px;
+      background: rgba(34,211,160,0.1);
+      border: 1px solid rgba(34,211,160,0.25);
+      color: var(--green);
+      border-radius: 20px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    /* ── DOWNLOAD CTA ── */
+    .cta-section {
+      background: var(--bg2);
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .cta-bg {
+      position: absolute;
+      width: 800px;
+      height: 800px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(99,102,241,0.1) 0%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      pointer-events: none;
+    }
+
+    .cta-section .section-title { font-size: clamp(48px, 5vw, 80px); margin-bottom: 20px; }
+
+    .cta-sub {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 48px;
+      line-height: 1.8;
+    }
+
+    .cta-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-cta-main {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px 48px;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 0 60px rgba(99,102,241,0.35);
+    }
+
+    .btn-cta-main:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 80px rgba(99,102,241,0.5);
+    }
+
+    .btn-cta-main:active { transform: scale(0.97); }
+
+    .cta-info {
+      margin-top: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+    }
+
+    .cta-info-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .cta-info-item i { color: var(--green); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--bg);
+      padding: 40px 80px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-brand {
+      font-family: 'Syne', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .footer-copy {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-links a {
+      font-size: 12px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--text); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .hero-left { padding: 80px 40px; }
+      section { padding: 60px 24px; }
+      .features-grid { grid-template-columns: 1fr; }
+      .presets-grid { grid-template-columns: repeat(2, 1fr); }
+      .new-features-grid { grid-template-columns: 1fr; }
+      .region-grid { grid-template-columns: repeat(3, 1fr); }
+      .changelog-wrap { grid-template-columns: 1fr; }
+      nav { padding: 0 24px; }
+      .nav-links { display: none; }
+      footer { flex-direction: column; gap: 20px; text-align: center; }
     }
   </style>
 </head>
-<body class="bg-zinc-950 text-white overflow-x-hidden">
+<body>
 
-  <!-- Navbar -->
-  <nav class="fixed top-0 left-0 right-0 z-50 bg-zinc-950/90 backdrop-blur-xl border-b border-zinc-800">
-    <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <img src="logo.png" alt="Regify Logo" class="w-10 h-10 object-contain">
-        <div>
-          <span class="text-3xl font-bold logo-font tracking-tighter">Regify</span>
-          <span class="text-xs text-blue-400 block -mt-1">v4.0</span>
-        </div>
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-icon">R</div>
+      <div>
+        <span class="nav-wordmark">Regify</span>
+        <span class="nav-version">v5.0</span>
       </div>
+    </a>
 
-      <div class="hidden md:flex items-center gap-8 text-sm font-medium">
-        <a href="#features" class="hover:text-blue-400 transition-colors">Features</a>
-        <a href="#presets" class="hover:text-blue-400 transition-colors">Presets</a>
-        <a href="#updates" class="hover:text-blue-400 transition-colors">Updates</a>
-        <a href="#guide" class="hover:text-blue-400 transition-colors">Guide</a>
-      </div>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#presets">Presets</a></li>
+      <li><a href="#new">What's New</a></li>
+      <li><a href="#changelog">Changelog</a></li>
+      <li><a href="#download">Download</a></li>
+    </ul>
 
-      <div class="flex items-center gap-3">
-        <a href="https://discord.gg/5VTp4B9mx" target="_blank"
-           class="flex items-center gap-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 hover:border-blue-500 px-5 py-2.5 rounded-2xl text-sm transition-all">
-          <i class="fa-brands fa-discord text-blue-400"></i>
-          <span>Join Discord</span>
-        </a>
-        <a href="https://drive.usercontent.google.com/download?id=10I-hQoXrDdFFkho7_tAjjNdhKrN14MHY&export=download&authuser=0" target="_blank"
-           class="bg-blue-600 hover:bg-blue-500 transition-all px-6 py-3 rounded-2xl font-semibold flex items-center gap-2 text-sm btn-press">
-          <i class="fa-solid fa-download"></i>
-          Download
-        </a>
-      </div>
+    <div class="nav-actions">
+      <a href="https://discord.gg/5VTp4B9mx" target="_blank" class="btn-ghost">
+        <i class="fa-brands fa-discord" style="color:#7289da;"></i>
+        Discord
+      </a>
+      <a href="https://drive.usercontent.google.com/u/0/uc?id=13ifovAroBT1RlGCbCjcCvQW9-WwidWxY&export=download" target="_blank" class="btn-primary">
+        <i class="fa-solid fa-download"></i>
+        Download v5
+      </a>
     </div>
   </nav>
 
-  <!-- Hero -->
-  <section class="hero-bg min-h-screen flex items-center pt-20 relative overflow-hidden">
-    <div id="particles" class="absolute inset-0 pointer-events-none"></div>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg-grid"></div>
+    <div class="hero-bg-glow"></div>
 
-    <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
-      <div class="space-y-8 z-10">
-        <div class="inline-flex items-center gap-2 bg-zinc-900 border border-blue-500/30 rounded-full px-6 py-2 text-sm">
-          <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-          Minecraft PvP Network Optimizer
-        </div>
-
-        <h1 class="text-6xl md:text-7xl font-bold logo-font tracking-tighter leading-none glow-blue">
-          Hitreg.<br>Latency.<br><span class="text-blue-500">Dominance.</span>
-        </h1>
-
-        <p class="text-xl text-zinc-400 max-w-lg">
-          Advanced Windows TCP/IP tweaks engineered for competitive Minecraft PvP. 
-          Get smoother hits and lower ping instantly.
-        </p>
-
-        <div class="flex flex-wrap gap-4">
-          <a href="https://drive.usercontent.google.com/download?id=10I-hQoXrDdFFkho7_tAjjNdhKrN14MHY&export=download&authuser=0" target="_blank"
-             class="bg-white text-black hover:bg-zinc-100 transition-all px-10 py-5 rounded-3xl font-semibold text-lg flex items-center gap-3 btn-press">
-            <i class="fa-solid fa-download"></i>
-            Download Regify v4.0
-          </a>
-          <a href="https://www.youtube.com/channel/UCYvj3SoGMbj-KiaIGf9kxoQ" target="_blank"
-             class="border border-zinc-700 hover:border-red-500 hover:text-red-400 transition-all px-8 py-5 rounded-3xl font-medium flex items-center gap-3">
-            <i class="fa-brands fa-youtube"></i>
-            Watch Tutorials
-          </a>
-        </div>
-
-        <div class="flex gap-8 text-sm pt-4">
-          <div class="flex items-center gap-2">
-            <i class="fa-solid fa-shield-halved text-green-500"></i>
-            <span>Admin Required</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <i class="fa-solid fa-bolt-lightning text-yellow-500"></i>
-            <span>Instant Apply</span>
-          </div>
-        </div>
+    <div class="hero-left">
+      <div class="hero-badge">
+        <div class="pulse-dot"></div>
+        Minecraft PvP Network Optimizer
       </div>
 
-      <!-- App Preview -->
-      <div class="relative hidden md:block z-10">
-        <div class="bg-zinc-900 border border-zinc-700 rounded-3xl overflow-hidden shadow-2xl">
-          <div class="bg-zinc-950 px-6 py-4 flex items-center justify-between border-b border-zinc-800">
-            <div class="flex gap-1.5">
-              <div class="w-3 h-3 bg-red-500 rounded-full"></div>
-              <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
-              <div class="w-3 h-3 bg-green-500 rounded-full"></div>
-            </div>
-            <div class="text-xs text-zinc-500 font-mono">Regify v4.0 • Competitive</div>
+      <h1 class="hero-title">
+        Kill<br>
+        <span class="line-accent">Latency.</span><br>
+        <span class="line-muted">Win Fights.</span>
+      </h1>
+
+      <p class="hero-sub">
+        Advanced Windows TCP/IP stack engineering for competitive Minecraft PvP.
+        Real-time monitoring, DNS benchmarking, FPS boosting, and 50+ tweaks
+        — all in one tool.
+      </p>
+
+      <div class="hero-cta">
+        <a href="https://drive.usercontent.google.com/u/0/uc?id=13ifovAroBT1RlGCbCjcCvQW9-WwidWxY&export=download" target="_blank" class="btn-download">
+          <i class="fa-solid fa-download"></i>
+          Download Regify v5.0
+          <span style="font-size:10px;opacity:0.7;">• Windows</span>
+        </a>
+        <a href="https://www.youtube.com/channel/UCYvj3SoGMbj-KiaIGf9kxoQ" target="_blank" class="btn-outline">
+          <i class="fa-brands fa-youtube" style="color:#ff4444;"></i>
+          Watch Tutorial
+        </a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-num">50+</span>
+          <span class="stat-label">Tweaks</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num">8</span>
+          <span class="stat-label">Presets</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num">v5</span>
+          <span class="stat-label">Latest</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div style="position:relative;">
+        <div class="app-mock">
+          <div class="app-titlebar">
+            <div class="titlebar-dot dot-r"></div>
+            <div class="titlebar-dot dot-y"></div>
+            <div class="titlebar-dot dot-g"></div>
+            <div class="titlebar-text">Regify v5.0 — Competitive</div>
           </div>
-          
-          <div class="p-10 bg-[#0a0a0a] relative min-h-[380px]">
-            <div class="scan-line absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-blue-500 to-transparent"></div>
-            
-            <div class="space-y-8">
-              <div>
-                <div class="flex justify-between text-sm mb-2">
-                  <span class="text-zinc-400">Latency Aggressiveness</span>
-                  <span class="text-blue-400 font-semibold">94</span>
+          <div class="app-body">
+            <div class="app-sidebar">
+              <div class="sidebar-icon active"><i class="fa-solid fa-gauge-high"></i></div>
+              <div class="sidebar-icon"><i class="fa-solid fa-network-wired"></i></div>
+              <div class="sidebar-icon"><i class="fa-solid fa-chart-line"></i></div>
+              <div class="sidebar-icon"><i class="fa-solid fa-dns" style="font-size:10px;">DNS</i></div>
+              <div class="sidebar-icon"><i class="fa-solid fa-gamepad"></i></div>
+              <div class="sidebar-icon"><i class="fa-solid fa-sliders"></i></div>
+              <div class="sidebar-icon" style="margin-top:auto;"><i class="fa-solid fa-gear"></i></div>
+            </div>
+            <div class="app-content">
+              <div class="scan-line"></div>
+
+              <div class="mock-label">Live Ping</div>
+              <div class="mock-value-row">
+                <div class="mock-big">12</div>
+                <div class="mock-unit">ms</div>
+              </div>
+
+              <div class="mock-sparkline">
+                <svg viewBox="0 0 240 48" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="sg" x1="0" x2="0" y1="0" y2="1">
+                      <stop offset="0%" stop-color="#6366f1" stop-opacity="0.4"/>
+                      <stop offset="100%" stop-color="#6366f1" stop-opacity="0"/>
+                    </linearGradient>
+                  </defs>
+                  <path d="M0,32 L20,28 L40,30 L60,18 L80,22 L100,16 L120,20 L140,12 L160,16 L180,10 L200,14 L220,8 L240,12" fill="none" stroke="#6366f1" stroke-width="1.5"/>
+                  <path d="M0,32 L20,28 L40,30 L60,18 L80,22 L100,16 L120,20 L140,12 L160,16 L180,10 L200,14 L220,8 L240,12 L240,48 L0,48Z" fill="url(#sg)"/>
+                </svg>
+              </div>
+
+              <div class="mock-row">
+                <div class="mock-chip">
+                  <div class="cv on">ON</div>
+                  <div class="cl">TCP NoDelay</div>
                 </div>
-                <div class="h-3 bg-zinc-800 rounded-3xl overflow-hidden">
-                  <div class="h-full w-[94%] bg-gradient-to-r from-blue-500 to-cyan-400 rounded-3xl"></div>
+                <div class="mock-chip">
+                  <div class="cv blue">150</div>
+                  <div class="cl">Initial RTO</div>
+                </div>
+                <div class="mock-chip">
+                  <div class="cv on">98%</div>
+                  <div class="cl">Score</div>
                 </div>
               </div>
 
-              <div class="grid grid-cols-2 gap-6">
-                <div class="bg-zinc-950 border border-emerald-500/30 rounded-2xl p-6 text-center">
-                  <div class="text-emerald-400 text-4xl font-bold">ON</div>
-                  <div class="text-xs text-zinc-500 mt-1">TCP NoDelay</div>
+              <div class="mock-bar-row">
+                <div class="mock-bar-head">
+                  <span>Latency Aggressiveness</span>
+                  <span>95</span>
                 </div>
-                <div class="bg-zinc-950 border border-zinc-800 rounded-2xl p-6 text-center">
-                  <div class="text-4xl font-bold text-white">172</div>
-                  <div class="text-xs text-zinc-500 mt-1">Initial RTO (ms)</div>
+                <div class="mock-bar-track">
+                  <div class="mock-bar-fill" style="width:95%;"></div>
                 </div>
               </div>
 
-              <a href="https://drive.usercontent.google.com/download?id=10I-hQoXrDdFFkho7_tAjjNdhKrN14MHY&export=download&authuser=0" target="_blank"
-                 class="w-full block text-center bg-blue-600 hover:bg-blue-500 py-4 rounded-2xl font-semibold text-lg transition-all btn-press">
-                APPLY TWEAKS
-              </a>
+              <div class="mock-bar-row">
+                <div class="mock-bar-head">
+                  <span>Responsiveness</span>
+                  <span>100</span>
+                </div>
+                <div class="mock-bar-track">
+                  <div class="mock-bar-fill" style="width:100%; background: linear-gradient(to right, var(--green), var(--cyan));"></div>
+                </div>
+              </div>
+
+              <button class="mock-apply-btn">⚡ APPLY TWEAKS</button>
             </div>
           </div>
         </div>
 
-        <div class="absolute -bottom-4 -left-6 bg-zinc-900 border border-emerald-500 text-emerald-400 text-sm px-6 py-3 rounded-2xl shadow-xl flex items-center gap-2">
-          <i class="fa-solid fa-check-circle"></i>
-          <span>Hitreg Optimized</span>
+        <div class="floating-badge">
+          <i class="fa-solid fa-circle-check" style="color:var(--green);"></i>
+          Hitreg Optimized
+        </div>
+        <div class="floating-badge2">
+          <i class="fa-solid fa-bolt" style="color:var(--accent2);"></i>
+          Live Ping Graph
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Features -->
-  <section id="features" class="py-24 bg-zinc-900">
-    <div class="max-w-7xl mx-auto px-6">
-      <div class="text-center mb-16">
-        <h2 class="text-5xl font-bold logo-font tracking-tight">Built for Serious PvP</h2>
+  <!-- TICKER -->
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <span class="ticker-item"><span class="dot"></span>TCP NoDelay</span>
+      <span class="ticker-item"><span class="dot"></span>Real-time Ping Graph</span>
+      <span class="ticker-item"><span class="dot"></span>DNS Benchmark</span>
+      <span class="ticker-item"><span class="dot"></span>FPS Booster Tab</span>
+      <span class="ticker-item"><span class="dot"></span>Traceroute Visual</span>
+      <span class="ticker-item"><span class="dot"></span>Custom Profiles</span>
+      <span class="ticker-item"><span class="dot"></span>System Health Monitor</span>
+      <span class="ticker-item"><span class="dot"></span>Minecraft-Specific Tweaks</span>
+      <span class="ticker-item"><span class="dot"></span>Process Priority Manager</span>
+      <span class="ticker-item"><span class="dot"></span>Tweak Scheduler</span>
+      <span class="ticker-item"><span class="dot"></span>Network Adapter Switcher</span>
+      <span class="ticker-item"><span class="dot"></span>Export Report</span>
+
+      <!-- duplicate for seamless loop -->
+      <span class="ticker-item"><span class="dot"></span>TCP NoDelay</span>
+      <span class="ticker-item"><span class="dot"></span>Real-time Ping Graph</span>
+      <span class="ticker-item"><span class="dot"></span>DNS Benchmark</span>
+      <span class="ticker-item"><span class="dot"></span>FPS Booster Tab</span>
+      <span class="ticker-item"><span class="dot"></span>Traceroute Visual</span>
+      <span class="ticker-item"><span class="dot"></span>Custom Profiles</span>
+      <span class="ticker-item"><span class="dot"></span>System Health Monitor</span>
+      <span class="ticker-item"><span class="dot"></span>Minecraft-Specific Tweaks</span>
+      <span class="ticker-item"><span class="dot"></span>Process Priority Manager</span>
+      <span class="ticker-item"><span class="dot"></span>Tweak Scheduler</span>
+      <span class="ticker-item"><span class="dot"></span>Network Adapter Switcher</span>
+      <span class="ticker-item"><span class="dot"></span>Export Report</span>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <section id="features" style="background: var(--bg);">
+    <div class="section-label">Core Features</div>
+    <h2 class="section-title">Built for Serious PvP</h2>
+    <p class="section-sub">Every tweak is tested and tuned specifically for competitive Minecraft environments.</p>
+
+    <div class="features-grid" style="margin-top: 60px;">
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(99,102,241,0.12);">⚡</div>
+        <div class="feature-title">Ultra-Low Latency Tweaks</div>
+        <div class="feature-desc">Nagle's Algorithm off, instant ACKs, reduced RTO, DCA, ECN/timestamps disabled. Every packet shaved.</div>
+        <span class="feature-tag">TCP/IP</span>
       </div>
-      <div class="grid md:grid-cols-3 gap-8">
-        <div class="card-hover bg-zinc-950 border border-zinc-800 rounded-3xl p-10">
-          <div class="text-5xl mb-6">⚡</div>
-          <h3 class="text-2xl font-semibold mb-3">Ultra-Low Latency Tweaks</h3>
-          <p class="text-zinc-400">Nagle's Algorithm off, immediate ACKs, reduced RTO, and more.</p>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(34,211,160,0.12);">📊</div>
+        <div class="feature-title">Live Ping Graph</div>
+        <div class="feature-desc">Animated sparkline on the dashboard polling your actual latency in real-time — not estimated, not cached.</div>
+        <span class="feature-tag">New in v5</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(244,63,94,0.12);">🔬</div>
+        <div class="feature-title">DNS Benchmark</div>
+        <div class="feature-desc">Tests 8 DNS servers (Cloudflare, Google, Quad9, AdGuard…) and ranks them by response time. Pick the fastest.</div>
+        <span class="feature-tag">New in v5</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(245,158,11,0.12);">🗺️</div>
+        <div class="feature-title">Traceroute Visual</div>
+        <div class="feature-desc">Animated hop-by-hop route to any host. See exactly where your packets are dying before they hit the server.</div>
+        <span class="feature-tag">New in v5</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(168,85,247,0.12);">🖥️</div>
+        <div class="feature-title">FPS Booster Tab</div>
+        <div class="feature-desc">Win10/Win11 registry FPS tweaks: disable fullscreen opt, GameDVR deep-kill, MSI mode for GPU, core parking off.</div>
+        <span class="feature-tag">New in v5</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(34,211,238,0.12);">💾</div>
+        <div class="feature-title">Custom Profile Builder</div>
+        <div class="feature-desc">Save and reload any combination of tweaks across sessions. Bring your config to any PC instantly.</div>
+        <span class="feature-tag">PROFILES</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(99,102,241,0.12);">⏱️</div>
+        <div class="feature-title">Tweak Scheduler</div>
+        <div class="feature-desc">Auto-apply your preset on Windows startup or at a scheduled time — always playing optimized, zero effort.</div>
+        <span class="feature-tag">New in v5</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(34,211,160,0.12);">🔄</div>
+        <div class="feature-title">System Health Monitor</div>
+        <div class="feature-desc">Live CPU/RAM/GPU polling via PowerShell displayed on the dashboard. Know if your rig is bottlenecking.</div>
+        <span class="feature-tag">New in v5</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(244,63,94,0.12);">📡</div>
+        <div class="feature-title">Network Adapter Switcher</div>
+        <div class="feature-desc">Detect all NICs and switch between them in one click. Ethernet? WiFi? Regify sees all of them.</div>
+        <span class="feature-tag">New in v5</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRESETS -->
+  <section id="presets" class="presets-section">
+    <div class="section-label">Presets</div>
+    <h2 class="section-title">Choose Your Style</h2>
+    <p class="section-sub">8 expertly tuned presets — from casual survival to UHC tournament mode. Swap in seconds.</p>
+
+    <div class="presets-grid">
+      <div class="preset-card" style="--c: var(--accent);" onmouseenter="this.style.boxShadow='0 20px 40px rgba(99,102,241,0.15)'" onmouseleave="this.style.boxShadow='none'">
+        <div class="preset-icon">⚖️</div>
+        <div class="preset-name">Balanced</div>
+        <span class="preset-tag" style="color: var(--accent2);">All Games</span>
+        <div class="preset-desc">Safe all-rounder. Best starting point for any game or connection type.</div>
+      </div>
+
+      <div class="preset-card" style="border-color: rgba(99,102,241,0.4);" onmouseenter="this.style.boxShadow='0 20px 40px rgba(99,102,241,0.2)'" onmouseleave="this.style.boxShadow='none'">
+        <div class="preset-badge" style="background:rgba(99,102,241,0.15); color: var(--accent2); border: 1px solid rgba(99,102,241,0.3);">Popular</div>
+        <div class="preset-icon">🏆</div>
+        <div class="preset-name">Competitive</div>
+        <span class="preset-tag" style="color: var(--accent2);">Low Latency</span>
+        <div class="preset-desc">Low latency for ranked servers. Stable hit-reg with NIC interrupt optimization.</div>
+      </div>
+
+      <div class="preset-card" onmouseenter="this.style.boxShadow='0 20px 40px rgba(245,158,11,0.15)'" onmouseleave="this.style.boxShadow='none'">
+        <div class="preset-icon">⚡</div>
+        <div class="preset-name">Ultra Aggressive</div>
+        <span class="preset-tag" style="color: #f59e0b;">Max Performance</span>
+        <div class="preset-desc">Maximum aggression. autotuning disabled, all offloads off. Wired only.</div>
+      </div>
+
+      <div class="preset-card" onmouseenter="this.style.boxShadow='0 20px 40px rgba(34,211,160,0.15)'" onmouseleave="this.style.boxShadow='none'">
+        <div class="preset-icon">🎮</div>
+        <div class="preset-name">MC PvP</div>
+        <span class="preset-tag" style="color: var(--green);">Minecraft</span>
+        <div class="preset-desc">Optimized for Hypixel, Dream SMP, 2b2t. Netty buffer + entity tick tweaks.</div>
+      </div>
+
+      <div class="preset-card" onmouseenter="this.style.boxShadow='0 20px 40px rgba(244,63,94,0.15)'" onmouseleave="this.style.boxShadow='none'">
+        <div class="preset-badge" style="background:rgba(244,63,94,0.1); color: var(--red); border: 1px solid rgba(244,63,94,0.25);">Tournament</div>
+        <div class="preset-icon">💎</div>
+        <div class="preset-name">MC UHC</div>
+        <span class="preset-tag" style="color: var(--red);">Tournament</span>
+        <div class="preset-desc">Ultra-low latency for UHC and speedruns. Thread affinity + disabled autotuning.</div>
+      </div>
+
+      <div class="preset-card" onmouseenter="this.style.boxShadow='0 20px 40px rgba(245,158,11,0.1)'" onmouseleave="this.style.boxShadow='none'">
+        <div class="preset-icon">🛡️</div>
+        <div class="preset-name">High Ping Stable</div>
+        <span class="preset-tag" style="color: #f59e0b;">150ms+</span>
+        <div class="preset-desc">Built for 150ms+ connections. Maximizes stability over raw speed.</div>
+      </div>
+
+      <div class="preset-card" onmouseenter="this.style.boxShadow='0 20px 40px rgba(244,63,94,0.15)'" onmouseleave="this.style.boxShadow='none'">
+        <div class="preset-icon">🖥️</div>
+        <div class="preset-name">FPS Boost</div>
+        <span class="preset-tag" style="color: #f43f5e;">Frames</span>
+        <div class="preset-desc">Registry FPS tweaks + GPU scheduler + power ultimate + core parking disable.</div>
+      </div>
+
+      <div class="preset-card" onmouseenter="this.style.boxShadow='0 20px 40px rgba(34,211,238,0.12)'" onmouseleave="this.style.boxShadow='none'">
+        <div class="preset-icon">📡</div>
+        <div class="preset-name">Streamer</div>
+        <span class="preset-tag" style="color: var(--cyan);">Stream</span>
+        <div class="preset-desc">Balanced for gaming + OBS. Prioritizes upload stability, max send/recv buffers.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REGION PRESETS -->
+  <section class="region-section">
+    <div class="section-label">Region Presets</div>
+    <h2 class="section-title">Tuned for Your Region</h2>
+    <p class="section-sub">Every region has unique routing quirks. Select yours and Regify adjusts RTO, autotune, and latency targets automatically.</p>
+
+    <div class="region-grid">
+      <div class="region-card">
+        <div class="region-flag">🇪🇺</div>
+        <div class="region-code">EU</div>
+        <div class="region-ping">~55ms baseline</div>
+      </div>
+      <div class="region-card">
+        <div class="region-flag">🇺🇸</div>
+        <div class="region-code">NA</div>
+        <div class="region-ping">~35ms baseline</div>
+      </div>
+      <div class="region-card">
+        <div class="region-flag">🌏</div>
+        <div class="region-code">Asia</div>
+        <div class="region-ping">~95ms baseline</div>
+      </div>
+      <div class="region-card">
+        <div class="region-flag">🌎</div>
+        <div class="region-code">SA</div>
+        <div class="region-ping">~120ms baseline</div>
+      </div>
+      <div class="region-card">
+        <div class="region-flag">🌊</div>
+        <div class="region-code">OCE</div>
+        <div class="region-ping">~180ms baseline</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT'S NEW IN V5 -->
+  <section id="new" class="new-features">
+    <div class="section-label">What's New</div>
+    <h2 class="section-title">Version 5 <span style="color:var(--accent2);">Drops Hard</span></h2>
+    <p class="section-sub">From a simple optimizer to a full PvP engineering suite. Here's everything new.</p>
+
+    <div class="new-features-grid">
+      <div class="nf-card">
+        <div class="nf-icon-wrap" style="background:rgba(99,102,241,0.12);">📈</div>
+        <div class="nf-content">
+          <div class="nf-title">Real-time Live Ping Graph <span class="nf-new-pill">New</span></div>
+          <div class="nf-desc">Animated sparkline on the dashboard. See your latency fluctuate live — not just a static number.</div>
         </div>
-        <div class="card-hover bg-zinc-950 border border-zinc-800 rounded-3xl p-10">
-          <div class="text-5xl mb-6">🎛️</div>
-          <h3 class="text-2xl font-semibold mb-3">Custom + Preset Profiles</h3>
-          <p class="text-zinc-400">Save your own configs or use Survival, Balanced, Competitive, Ultra.</p>
+      </div>
+
+      <div class="nf-card">
+        <div class="nf-icon-wrap" style="background:rgba(34,211,160,0.12);">💻</div>
+        <div class="nf-content">
+          <div class="nf-title">System Health Monitor <span class="nf-new-pill">New</span></div>
+          <div class="nf-desc">CPU/RAM/GPU polling via PowerShell. Know if your hardware is limiting performance before you blame your ping.</div>
         </div>
-        <div class="card-hover bg-zinc-950 border border-zinc-800 rounded-3xl p-10">
-          <div class="text-5xl mb-6">🔄</div>
-          <h3 class="text-2xl font-semibold mb-3">One-Click Reset</h3>
-          <p class="text-zinc-400">Easily revert all changes back to Windows defaults.</p>
+      </div>
+
+      <div class="nf-card">
+        <div class="nf-icon-wrap" style="background:rgba(244,63,94,0.12);">🔍</div>
+        <div class="nf-content">
+          <div class="nf-title">DNS Benchmark <span class="nf-new-pill">New</span></div>
+          <div class="nf-desc">Tests Cloudflare, Google, Quad9, AdGuard, OpenDNS and 3 more — ranks by measured response time.</div>
+        </div>
+      </div>
+
+      <div class="nf-card">
+        <div class="nf-icon-wrap" style="background:rgba(245,158,11,0.12);">🗺️</div>
+        <div class="nf-content">
+          <div class="nf-title">Traceroute Visual <span class="nf-new-pill">New</span></div>
+          <div class="nf-desc">Hop-by-hop animated route to any host. Pinpoint packet loss and rogue ISP hops.</div>
+        </div>
+      </div>
+
+      <div class="nf-card">
+        <div class="nf-icon-wrap" style="background:rgba(168,85,247,0.12);">🎛️</div>
+        <div class="nf-content">
+          <div class="nf-title">Process Priority Manager <span class="nf-new-pill">New</span></div>
+          <div class="nf-desc">Boost or lower any running process priority directly from Regify. Give Java more CPU headroom.</div>
+        </div>
+      </div>
+
+      <div class="nf-card">
+        <div class="nf-icon-wrap" style="background:rgba(34,211,238,0.12);">⏰</div>
+        <div class="nf-content">
+          <div class="nf-title">Tweak Scheduler <span class="nf-new-pill">New</span></div>
+          <div class="nf-desc">Auto-apply any preset at Windows startup or a set time. Always play optimized without thinking about it.</div>
+        </div>
+      </div>
+
+      <div class="nf-card">
+        <div class="nf-icon-wrap" style="background:rgba(99,102,241,0.12);">🎨</div>
+        <div class="nf-content">
+          <div class="nf-title">Dark / Neon / Ice / Blood Themes <span class="nf-new-pill">New</span></div>
+          <div class="nf-desc">4 built-in themes that persist across runs. Neon for the drip, Blood for the warriors.</div>
+        </div>
+      </div>
+
+      <div class="nf-card">
+        <div class="nf-icon-wrap" style="background:rgba(244,63,94,0.12);">📤</div>
+        <div class="nf-content">
+          <div class="nf-title">Export Report <span class="nf-new-pill">New</span></div>
+          <div class="nf-desc">Save a full optimization report as .txt for sharing, troubleshooting, or Discord flex.</div>
+        </div>
+      </div>
+
+      <div class="nf-card">
+        <div class="nf-icon-wrap" style="background:rgba(34,211,160,0.12);">🔗</div>
+        <div class="nf-content">
+          <div class="nf-title">Network Adapter Switcher <span class="nf-new-pill">New</span></div>
+          <div class="nf-desc">Detect all NICs, switch between them, apply per-adapter tweaks like IRQ affinity and interrupt moderation.</div>
+        </div>
+      </div>
+
+      <div class="nf-card">
+        <div class="nf-icon-wrap" style="background:rgba(245,158,11,0.12);">👻</div>
+        <div class="nf-content">
+          <div class="nf-title">Stealth Mode <span class="nf-new-pill">New</span></div>
+          <div class="nf-desc">System-tray-only mode with no taskbar button. Quick-apply and ping check from the tray. Stay invisible.</div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Presets -->
-  <section id="presets" class="py-24">
-    <div class="max-w-7xl mx-auto px-6">
-      <h2 class="text-5xl font-bold logo-font tracking-tight text-center mb-16">Choose Your Style</h2>
-      <div class="grid md:grid-cols-4 gap-6">
-        <div class="bg-zinc-900 border border-zinc-800 hover:border-emerald-500/50 rounded-3xl p-8 card-hover">
-          <div class="text-5xl mb-4">🌿</div>
-          <h3 class="text-2xl font-semibold">Survival</h3>
-          <p class="text-emerald-400 text-sm">Stable • Casual</p>
+  <!-- CHANGELOG -->
+  <section id="changelog" class="changelog-section">
+    <div class="section-label">Changelog</div>
+    <h2 class="section-title">Release Notes</h2>
+
+    <div class="changelog-wrap">
+      <div class="changelog-sidebar">
+        <div class="version-pill">v5.0</div>
+        <div class="changelog-meta">
+          Major feature release.<br>
+          PySide6 + QWebEngine architecture.<br>
+          Full rewrite of the optimization engine.<br><br>
+          <span style="color: var(--accent2);">Requires admin privileges.<br>Windows 10 / 11 only.</span>
         </div>
-        <div class="bg-zinc-900 border border-blue-500 rounded-3xl p-8 card-hover relative">
-          <div class="absolute top-6 right-6 text-xs bg-blue-600 px-4 py-1 rounded-full">MOST POPULAR</div>
-          <div class="text-5xl mb-4">⚔️</div>
-          <h3 class="text-2xl font-semibold">PvP Balanced</h3>
-          <p class="text-blue-400 text-sm">Recommended All-Rounder</p>
+        <div style="display:flex; gap:12px; flex-direction:column;">
+          <a href="https://drive.usercontent.google.com/u/0/uc?id=13ifovAroBT1RlGCbCjcCvQW9-WwidWxY&export=download" target="_blank" class="btn-primary" style="justify-content:center;">
+            <i class="fa-solid fa-download"></i> Download v5.0
+          </a>
+          <a href="https://discord.gg/5VTp4B9mx" target="_blank" class="btn-ghost" style="justify-content:center;">
+            <i class="fa-brands fa-discord" style="color:#7289da;"></i> Join Discord
+          </a>
         </div>
-        <div class="bg-zinc-900 border border-zinc-800 hover:border-violet-500/50 rounded-3xl p-8 card-hover">
-          <div class="text-5xl mb-4">💎</div>
-          <h3 class="text-2xl font-semibold">Competitive</h3>
-          <p class="text-violet-400 text-sm">Low Latency Focus</p>
-        </div>
-        <div class="bg-zinc-900 border border-zinc-800 hover:border-orange-500/50 rounded-3xl p-8 card-hover">
-          <div class="text-5xl mb-4">🔥</div>
-          <h3 class="text-2xl font-semibold">Ultra Aggressive</h3>
-          <p class="text-orange-400 text-sm">Max Performance</p>
-        </div>
+      </div>
+
+      <div>
+        <ul class="changelog-list">
+          <li class="changelog-item">
+            <div class="changelog-bullet" style="background:rgba(34,211,160,0.15); color:var(--green);">★</div>
+            <div class="changelog-text">Live Ping Sparkline Graph on the dashboard — polls latency in real-time via background thread
+              <span>New feature</span>
+            </div>
+          </li>
+          <li class="changelog-item">
+            <div class="changelog-bullet" style="background:rgba(99,102,241,0.15); color:var(--accent2);">★</div>
+            <div class="changelog-text">System Health Monitor — CPU/RAM/GPU polling via PowerShell, rendered on dashboard
+              <span>New feature</span>
+            </div>
+          </li>
+          <li class="changelog-item">
+            <div class="changelog-bullet" style="background:rgba(34,211,160,0.15); color:var(--green);">★</div>
+            <div class="changelog-text">Speed Test integration — Cloudflare / fast.com latency probe built in
+              <span>New feature</span>
+            </div>
+          </li>
+          <li class="changelog-item">
+            <div class="changelog-bullet" style="background:rgba(99,102,241,0.15); color:var(--accent2);">★</div>
+            <div class="changelog-text">Custom Profile Builder — save/load your own tweak combos across sessions
+              <span>New feature</span>
+            </div>
+          </li>
+          <li class="changelog-item">
+            <div class="changelog-bullet" style="background:rgba(34,211,160,0.15); color:var(--green);">★</div>
+            <div class="changelog-text">Tweak Scheduler — auto-apply preset on Windows startup or at a set time
+              <span>New feature</span>
+            </div>
+          </li>
+          <li class="changelog-item">
+            <div class="changelog-bullet" style="background:rgba(99,102,241,0.15); color:var(--accent2);">★</div>
+            <div class="changelog-text">Network Adapter Switcher — detect and switch between NICs in one click
+              <span>New feature</span>
+            </div>
+          </li>
+          <li class="changelog-item">
+            <div class="changelog-bullet" style="background:rgba(34,211,160,0.15); color:var(--green);">★</div>
+            <div class="changelog-text">Export Report — save full optimization report as .txt
+              <span>New feature</span>
+            </div>
+          </li>
+          <li class="changelog-item">
+            <div class="changelog-bullet" style="background:rgba(99,102,241,0.15); color:var(--accent2);">★</div>
+            <div class="changelog-text">Traceroute Visual — animated hop-by-hop route to any host
+              <span>New feature</span>
+            </div>
+          </li>
+          <li class="changelog-item">
+            <div class="changelog-bullet" style="background:rgba(244,63,94,0.15); color:var(--red);">★</div>
+            <div class="changelog-text">FPS Booster Tab — Win11/Win10 registry FPS tweaks, MSI mode, GameDVR deep-kill
+              <span>New feature</span>
+            </div>
+          </li>
+          <li class="changelog-item">
+            <div class="changelog-bullet" style="background:rgba(99,102,241,0.15); color:var(--accent2);">★</div>
+            <div class="changelog-text">Dark / Neon / Ice / Blood theme switcher — persists across runs
+              <span>New feature</span>
+            </div>
+          </li>
+          <li class="changelog-item">
+            <div class="changelog-bullet" style="background:rgba(34,211,160,0.15); color:var(--green);">★</div>
+            <div class="changelog-text">DNS Benchmark — tests 8 DNS servers and ranks by response time
+              <span>New feature</span>
+            </div>
+          </li>
+          <li class="changelog-item">
+            <div class="changelog-bullet" style="background:rgba(245,158,11,0.15); color:var(--yellow);">↑</div>
+            <div class="changelog-text">Sidebar now collapses to icon-only rail on small windows
+              <span>Improvement</span>
+            </div>
+          </li>
+          <li class="changelog-item">
+            <div class="changelog-bullet" style="background:rgba(245,158,11,0.15); color:var(--yellow);">↑</div>
+            <div class="changelog-text">Keyboard shortcut cheatsheet overlay (press ? to open)
+              <span>Improvement</span>
+            </div>
+          </li>
+          <li class="changelog-item">
+            <div class="changelog-bullet" style="background:rgba(245,158,11,0.15); color:var(--yellow);">↑</div>
+            <div class="changelog-text">Process Priority Manager — boost or lower any running process
+              <span>Improvement</span>
+            </div>
+          </li>
+          <li class="changelog-item">
+            <div class="changelog-bullet" style="background:rgba(245,158,11,0.15); color:var(--yellow);">↑</div>
+            <div class="changelog-text">Stealth mode — system-tray-only, no taskbar button with quick-apply from tray
+              <span>Improvement</span>
+            </div>
+          </li>
+          <li class="changelog-item">
+            <div class="changelog-bullet" style="background:rgba(99,102,241,0.15); color:var(--accent2);">✓</div>
+            <div class="changelog-text">Added 3 new presets: MC UHC, FPS Boost, Streamer (total: 8 presets)
+              <span>Addition</span>
+            </div>
+          </li>
+          <li class="changelog-item">
+            <div class="changelog-bullet" style="background:rgba(99,102,241,0.15); color:var(--accent2);">✓</div>
+            <div class="changelog-text">5 region presets: EU, NA, Asia, SA, OCE with tuned RTO + autotune levels
+              <span>Addition</span>
+            </div>
+          </li>
+          <li class="changelog-item">
+            <div class="changelog-bullet" style="background:rgba(34,211,160,0.15); color:var(--green);">✓</div>
+            <div class="changelog-text">Stability improvements, crash fixes, and better error handling throughout
+              <span>Bug Fix</span>
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
   </section>
 
-  <!-- Updates -->
-  <section id="updates" class="py-24 bg-zinc-900">
-    <div class="max-w-7xl mx-auto px-6">
-      <div class="text-center mb-12">
-        <h2 class="text-5xl font-bold logo-font tracking-tight">What's New in v4.0</h2>
-        <p class="text-zinc-400 mt-4">Major improvements and stability fixes</p>
-      </div>
+  <!-- DOWNLOAD CTA -->
+  <section id="download" class="cta-section">
+    <div class="cta-bg"></div>
+    <div style="position:relative; z-index:2;">
+      <div class="section-label" style="justify-content:center;">Download</div>
+      <h2 class="section-title">Get the Edge<br><span style="color:var(--accent2);">Today.</span></h2>
+      <p class="cta-sub">
+        Regify v5.0 — the most complete Minecraft network optimizer ever shipped.<br>
+        Free. No account. No bullshit. Just results.
+      </p>
 
-      <div class="max-w-2xl mx-auto bg-zinc-950 border border-zinc-800 rounded-3xl p-10 space-y-8">
-        <div class="flex gap-6">
-          <div class="text-blue-400 font-mono text-sm w-20">v4.0</div>
-          <div>
-            <ul class="space-y-3 text-zinc-300">
-              <li class="flex items-start gap-3"><span class="text-green-500 mt-1">•</span> Brand new modern UI with smoother animations</li>
-              <li class="flex items-start gap-3"><span class="text-green-500 mt-1">•</span> Improved preset system & profile management</li>
-              <li class="flex items-start gap-3"><span class="text-green-500 mt-1">•</span> Better RSS, RSC, and IRQ handling</li>
-              <li class="flex items-start gap-3"><span class="text-green-500 mt-1">•</span> Enhanced console logging & real-time ping</li>
-              <li class="flex items-start gap-3"><span class="text-green-500 mt-1">•</span> Bug fixes & stability improvements</li>
-            </ul>
+      <div class="cta-actions">
+        <a href="https://drive.usercontent.google.com/u/0/uc?id=13ifovAroBT1RlGCbCjcCvQW9-WwidWxY&export=download" target="_blank" class="btn-cta-main">
+          <i class="fa-solid fa-download" style="font-size:18px;"></i>
+          <div style="text-align:left;">
+            Download Regify v5.0
+            <div style="font-size:11px; font-weight:400; opacity:0.65; margin-top:2px;">Windows 10 / 11 • Free</div>
           </div>
+        </a>
+        <a href="https://discord.gg/5VTp4B9mx" target="_blank" class="btn-outline" style="padding: 20px 28px; font-size: 14px;">
+          <i class="fa-brands fa-discord" style="color:#7289da; font-size:18px;"></i>
+          Join Discord
+        </a>
+      </div>
+
+      <div class="cta-info">
+        <div class="cta-info-item">
+          <i class="fa-solid fa-shield-halved"></i>
+          Admin Required
+        </div>
+        <div class="cta-info-item">
+          <i class="fa-solid fa-bolt-lightning"></i>
+          Instant Apply
+        </div>
+        <div class="cta-info-item">
+          <i class="fa-solid fa-rotate-left"></i>
+          One-Click Reset
+        </div>
+        <div class="cta-info-item">
+          <i class="fa-solid fa-circle-check"></i>
+          Open Source
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Download CTA -->
-  <section id="download" class="py-28">
-    <div class="max-w-4xl mx-auto text-center px-6">
-      <h2 class="text-6xl font-bold logo-font tracking-tighter mb-6">Get the Edge Today</h2>
-      <p class="text-2xl text-zinc-400 mb-12">Download Regify v4.0 and start dominating your PvP servers.</p>
-
-      <a href="https://drive.usercontent.google.com/download?id=10I-hQoXrDdFFkho7_tAjjNdhKrN14MHY&export=download&authuser=0" target="_blank"
-         class="group inline-flex items-center gap-5 bg-white text-black hover:bg-zinc-100 transition-all duration-300 text-2xl font-semibold px-20 py-9 rounded-3xl shadow-2xl shadow-blue-500/30 btn-press">
-        <i class="fa-solid fa-download text-4xl group-active:rotate-12 transition-transform"></i>
-        <div class="text-left">
-          Download Regify v4.0
-          <div class="text-sm font-normal text-zinc-500">Version 4.0 • Windows</div>
-        </div>
-      </a>
-
-      <div class="mt-16 flex justify-center gap-8">
-        <a href="https://discord.gg/5VTp4B9mx" target="_blank" 
-           class="flex items-center gap-3 text-lg hover:text-blue-400 transition-colors">
-          <i class="fa-brands fa-discord text-3xl"></i>
-          <span>Join Discord Community</span>
-        </a>
-        <a href="https://www.youtube.com/channel/UCYvj3SoGMbj-KiaIGf9kxoQ" target="_blank"
-           class="flex items-center gap-3 text-lg hover:text-red-400 transition-colors">
-          <i class="fa-brands fa-youtube text-3xl"></i>
-          <span>Watch Tutorial</span>
-        </a>
-      </div>
+  <!-- FOOTER -->
+  <footer>
+    <div>
+      <div class="footer-brand">Regify</div>
+      <div class="footer-copy" style="margin-top:6px;">© 2026 PaxtanTools. Built for competitive players.</div>
     </div>
-  </section>
-
-  <script>
-    // Simple particle background
-    const particlesEl = document.getElementById('particles');
-    for(let i=0;i<40;i++){
-      const p = document.createElement('div');
-      p.className = 'particle';
-      p.style.top = `${Math.random()*100}%`;
-      p.style.left = `${Math.random()*100}%`;
-      p.style.width = `${2 + Math.random()*3}px`;
-      p.style.height = p.style.width;
-      p.style.animationDuration = `${5 + Math.random()*10}s`;
-      particlesEl.appendChild(p);
-    }
-  </script>
+    <div class="footer-links">
+      <a href="https://discord.gg/5VTp4B9mx" target="_blank"><i class="fa-brands fa-discord"></i> Discord</a>
+      <a href="https://www.youtube.com/channel/UCYvj3SoGMbj-KiaIGf9kxoQ" target="_blank"><i class="fa-brands fa-youtube"></i> YouTube</a>
+      <a href="https://drive.usercontent.google.com/u/0/uc?id=13ifovAroBT1RlGCbCjcCvQW9-WwidWxY&export=download" target="_blank"><i class="fa-solid fa-download"></i> Download</a>
+    </div>
+  </footer>
 
 </body>
 </html>
