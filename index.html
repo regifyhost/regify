@@ -3,402 +3,836 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>REGIFY | Pro-Grade System Optimization</title>
+    <title>REGIFY V5.1 | Pro-Grade System Optimization</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono&display=swap');
-
         :root {
-            --navy-dark: #030711;
-            --navy-deep: #060a16;
-            --accent-blue: #3b82f6;
-            --accent-cyan: #06b6d4;
+            --bg: #02040a;
+            --bg2: #060c18;
+            --blue: #2563eb;
+            --blue-light: #3b82f6;
+            --cyan: #06b6d4;
+            --border: rgba(255,255,255,0.06);
+            --glass: rgba(10,18,40,0.5);
         }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            background-color: var(--navy-dark);
-            color: #f8fafc;
-            font-family: 'Space Grotesk', sans-serif;
-            scroll-behavior: smooth;
+            background: var(--bg);
+            color: #f1f5f9;
+            font-family: 'Syne', sans-serif;
             overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
-        .mono { font-family: 'JetBrains Mono', monospace; }
+        .mono { font-family: 'DM Mono', monospace; }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--navy-dark); }
-        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--accent-blue); }
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: #1e3a5f; border-radius: 10px; }
 
+        /* Grid Background */
         .grid-bg {
-            background-image: radial-gradient(circle at 2px 2px, rgba(59, 130, 246, 0.04) 1px, transparent 0);
-            background-size: 32px 32px;
+            background-image:
+                linear-gradient(rgba(37,99,235,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(37,99,235,0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
         }
 
-        .hero-glow {
-            background: radial-gradient(circle at 50% 20%, rgba(59, 130, 246, 0.12) 0%, transparent 60%);
+        /* Hero Glow */
+        .hero-glow::before {
+            content: '';
+            position: absolute;
+            top: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(37,99,235,0.15) 0%, transparent 65%);
+            pointer-events: none;
+            z-index: 0;
         }
 
-        .glass-card {
-            background: rgba(15, 23, 42, 0.4);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        /* Glass Cards */
+        .glass {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            transition: border-color 0.3s, transform 0.3s, background 0.3s;
+        }
+        .glass:hover {
+            border-color: rgba(37,99,235,0.35);
+            background: rgba(10,18,40,0.75);
+            transform: translateY(-3px);
         }
 
-        .glass-card:hover {
-            border-color: rgba(59, 130, 246, 0.3);
-            background: rgba(15, 23, 42, 0.6);
-            transform: translateY(-4px);
-        }
-
+        /* Primary Button */
         .btn-primary {
-            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
-            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            box-shadow: 0 0 30px rgba(37,99,235,0.35);
+            transition: all 0.3s;
         }
         .btn-primary:hover {
+            box-shadow: 0 0 50px rgba(37,99,235,0.6);
             transform: scale(1.02);
-            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.5);
         }
 
+        /* Cyan Button */
+        .btn-cyan {
+            background: #06b6d4;
+            box-shadow: 0 0 30px rgba(6,182,212,0.35);
+            transition: all 0.3s;
+        }
+        .btn-cyan:hover {
+            background: #22d3ee;
+            box-shadow: 0 0 50px rgba(6,182,212,0.55);
+            transform: scale(1.02);
+        }
+
+        /* Announcement Badge */
+        .announce-badge {
+            background: linear-gradient(135deg, rgba(37,99,235,0.2), rgba(6,182,212,0.1));
+            border: 1px solid rgba(37,99,235,0.4);
+        }
+
+        /* Nav */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            background: rgba(2,4,10,0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Price slash */
         .price-slash {
             position: relative;
-            opacity: 0.6;
+            opacity: 0.45;
         }
         .price-slash::after {
             content: '';
             position: absolute;
-            width: 110%;
+            width: 115%;
             height: 2px;
             background: #ef4444;
             top: 50%;
-            left: -5%;
-            transform: rotate(-12deg);
+            left: -7%;
+            transform: rotate(-10deg);
         }
 
-        .cursor-glow {
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.07) 0%, transparent 70%);
+        /* Glow line */
+        .glow-line {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #2563eb, #06b6d4, transparent);
+        }
+
+        /* Announcement section specifics */
+        .new-badge {
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            box-shadow: 0 0 20px rgba(22,163,74,0.4);
+        }
+
+        .feature-pill {
+            background: rgba(37,99,235,0.1);
+            border: 1px solid rgba(37,99,235,0.25);
+            transition: all 0.25s;
+        }
+        .feature-pill:hover {
+            background: rgba(37,99,235,0.2);
+            border-color: rgba(37,99,235,0.5);
+        }
+
+        /* Cursor glow */
+        #cursor-glow {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(37,99,235,0.06) 0%, transparent 70%);
             position: fixed;
             pointer-events: none;
             z-index: 9999;
             transform: translate(-50%, -50%);
+            transition: left 0.1s, top 0.1s;
         }
 
-        /* FAQ Logic Fix */
-        details summary::-webkit-details-marker { display:none; }
-        details[open] summary i { transform: rotate(180deg); color: #06b6d4; }
+        /* FAQ */
+        details summary::-webkit-details-marker { display: none; }
+        details[open] .faq-icon { transform: rotate(45deg); color: #06b6d4; }
+        details[open] { border-color: rgba(37,99,235,0.35) !important; }
+
+        /* Scan line animation for hero terminal */
+        @keyframes scanline {
+            0% { top: -10%; }
+            100% { top: 110%; }
+        }
+        .scanline {
+            position: absolute;
+            left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(37,99,235,0.3), transparent);
+            animation: scanline 3s linear infinite;
+            pointer-events: none;
+        }
+
+        /* Pulse dot */
+        @keyframes pulse-ring {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+        .pulse-dot::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: #22c55e;
+            animation: pulse-ring 1.5s ease-out infinite;
+        }
+
+        /* Staggered fade in */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-up { animation: fadeUp 0.7s ease forwards; }
+        .delay-1 { animation-delay: 0.1s; opacity: 0; }
+        .delay-2 { animation-delay: 0.2s; opacity: 0; }
+        .delay-3 { animation-delay: 0.35s; opacity: 0; }
+        .delay-4 { animation-delay: 0.5s; opacity: 0; }
+        .delay-5 { animation-delay: 0.65s; opacity: 0; }
+
+        /* Ticker */
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .ticker-inner {
+            display: inline-flex;
+            animation: ticker 20s linear infinite;
+            white-space: nowrap;
+        }
+
+        /* Highlight shine */
+        .shine {
+            position: relative;
+            overflow: hidden;
+        }
+        .shine::after {
+            content: '';
+            position: absolute;
+            top: -50%; left: -75%;
+            width: 50%; height: 200%;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.08), transparent);
+            transform: skewX(-20deg);
+            animation: shine 4s ease-in-out infinite;
+        }
+        @keyframes shine {
+            0%, 70% { left: -75%; }
+            100% { left: 125%; }
+        }
+
+        /* Section number */
+        .section-num {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            color: rgba(37,99,235,0.6);
+            letter-spacing: 0.3em;
+        }
     </style>
 </head>
 <body class="grid-bg">
-    <div class="cursor-glow" id="cursor"></div>
 
-    <!-- 1-Hour Trial Banner -->
-    <div class="bg-blue-600/10 border-b border-blue-500/20 py-2 text-center overflow-hidden relative">
-        <p class="text-[11px] font-bold tracking-[0.3em] uppercase text-blue-400 animate-pulse">
-            LIMITED OFFER: 1-HOUR FULL PRO ACCESS TRIAL FOR ALL NEW HARDWARE IDs
-        </p>
+<div id="cursor-glow"></div>
+
+<!-- Top Ticker Bar -->
+<div style="background: linear-gradient(90deg, rgba(37,99,235,0.15), rgba(6,182,212,0.1), rgba(37,99,235,0.15)); border-bottom: 1px solid rgba(37,99,235,0.2); padding: 8px 0; overflow: hidden;">
+    <div class="ticker-inner">
+        <span style="font-size:10px; font-weight:700; letter-spacing:0.3em; color:#60a5fa; text-transform:uppercase; padding: 0 40px;">
+            🚀 V5.1 FULL RELEASE NOW LIVE &nbsp;·&nbsp; ANTI-MALWARE PROTECTION ACTIVE &nbsp;·&nbsp; 1-HOUR FREE PRO TRIAL &nbsp;·&nbsp; LIFETIME LICENSE $15 &nbsp;·&nbsp; NEW UI · NEW PERFORMANCE LAYER &nbsp;·&nbsp;
+        </span>
+        <span style="font-size:10px; font-weight:700; letter-spacing:0.3em; color:#60a5fa; text-transform:uppercase; padding: 0 40px;">
+            🚀 V5.1 FULL RELEASE NOW LIVE &nbsp;·&nbsp; ANTI-MALWARE PROTECTION ACTIVE &nbsp;·&nbsp; 1-HOUR FREE PRO TRIAL &nbsp;·&nbsp; LIFETIME LICENSE $15 &nbsp;·&nbsp; NEW UI · NEW PERFORMANCE LAYER &nbsp;·&nbsp;
+        </span>
     </div>
+</div>
 
-    <!-- Navigation -->
-    <nav class="fixed w-full z-50 bg-navy-dark/80 backdrop-blur-md border-b border-white/5 top-8">
-        <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <div class="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-white shadow-[0_0_15px_rgba(37,99,235,0.4)]">R</div>
-                <div class="flex flex-col">
-                    <span class="text-lg font-bold tracking-tighter uppercase leading-none">REGIFY</span>
-                    <span class="text-[9px] text-blue-500 font-mono tracking-[0.2em] font-bold">V5.1 PRO CORE</span>
-                </div>
-            </div>
-            <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-400">
-                <a href="#features" class="hover:text-blue-400 transition">Engine</a>
-                <a href="#team" class="hover:text-blue-400 transition">Ownership</a>
-                <a href="#staff" class="text-cyan-400 hover:text-white transition">Apply for Staff</a>
-                <a href="#pricing" class="hover:text-blue-400 transition">License</a>
-            </div>
-            <div class="flex items-center space-x-5">
-                <a href="https://discord.gg/weMb3yDn" target="_blank" class="text-slate-400 hover:text-white transition"><i data-lucide="message-square" class="w-5 h-5"></i></a>
-                <a href="#pricing" class="btn-primary px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest">Get Key</a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="relative pt-60 pb-32 px-6 hero-glow">
-        <div class="max-w-7xl mx-auto text-center">
-            <div data-aos="fade-down" class="inline-flex items-center space-x-2 bg-blue-500/10 border border-blue-500/20 px-4 py-1.5 rounded-full text-blue-400 text-[10px] font-black uppercase tracking-[0.2em] mb-10">
-                <span class="w-2 h-2 rounded-full bg-blue-500 animate-ping"></span>
-                <span>Pro Authentication System Online</span>
-            </div>
-            <h1 data-aos="fade-up" class="text-7xl md:text-9xl font-black mb-8 tracking-tighter leading-none">
-                PURE <br> <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-600">OPTIMIZATION.</span>
-            </h1>
-            <p data-aos="fade-up" data-aos-delay="100" class="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto mb-12 leading-relaxed">
-                REGIFY V5.1 is a kernel-level Windows tuner. No free versions, no shortcuts. Just raw performance protected by an <span class="text-white font-bold">Encrypted Licensing System</span>.
-            </p>
-            <div data-aos="fade-up" data-aos-delay="200" class="flex flex-col sm:flex-row items-center justify-center gap-6">
-                <a href="https://drive.google.com/file/d/1wFcKlJAqHgmNAlNdtwUOJM-9c7ggEkdl/view?usp=sharing" target="_blank" class="btn-primary px-12 py-5 rounded-2xl font-black flex items-center space-x-4 text-xl group">
-                    <span>LAUNCH DOWNLOAD</span>
-                    <i data-lucide="arrow-right" class="w-6 h-6 group-hover:translate-x-2 transition-transform"></i>
-                </a>
-                <div class="text-left bg-white/5 border border-white/10 px-6 py-3 rounded-2xl">
-                    <div class="text-[10px] uppercase font-bold text-slate-500 tracking-widest">Trial Access</div>
-                    <div class="text-sm font-bold text-blue-400">1 Hour Free Pro</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Optimization Deep-Dive -->
-    <section id="features" class="py-32 bg-navy-deep relative overflow-hidden">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="grid lg:grid-cols-3 gap-8">
-                <div class="lg:col-span-1" data-aos="fade-right">
-                    <h2 class="text-4xl font-bold mb-6 tracking-tighter">TECHNICAL <br>SPECIFICATIONS.</h2>
-                    <p class="text-slate-500 mb-10 text-sm leading-relaxed">
-                        Regify V5.1 utilizes direct registry manipulation and CPU scheduler overrides to eliminate input delay.
-                    </p>
-                    <div class="space-y-4 font-mono text-[11px] text-blue-500/70">
-                        <div class="flex justify-between border-b border-white/5 pb-2 uppercase"><span>TCP_NoDelay</span><span>[ACTIVE]</span></div>
-                        <div class="flex justify-between border-b border-white/5 pb-2 uppercase"><span>GpuPriority</span><span>[LEVEL_8]</span></div>
-                        <div class="flex justify-between border-b border-white/5 pb-2 uppercase"><span>SystemResponsiveness</span><span>[OPTIMIZED]</span></div>
-                        <div class="flex justify-between border-b border-white/5 pb-2 uppercase"><span>NetworkThrottling</span><span>[DISABLED]</span></div>
-                    </div>
-                </div>
-                <div class="lg:col-span-2 grid sm:grid-cols-2 gap-6">
-                    <div class="glass-card p-8 rounded-3xl" data-aos="fade-up">
-                        <i data-lucide="lock" class="w-10 h-10 text-blue-500 mb-6"></i>
-                        <h4 class="text-xl font-bold mb-3">Pro Authentication</h4>
-                        <p class="text-slate-400 text-sm leading-relaxed">Every license is tied to your unique Hardware ID (HWID). This prevents unauthorized usage and ensures your settings are unique to your PC.</p>
-                    </div>
-                    <div class="glass-card p-8 rounded-3xl" data-aos="fade-up" data-aos-delay="100">
-                        <i data-lucide="timer" class="w-10 h-10 text-cyan-500 mb-6"></i>
-                        <h4 class="text-xl font-bold mb-3">1-Hour Full Trial</h4>
-                        <p class="text-slate-400 text-sm leading-relaxed">Test the full power of Regify Pro before purchasing. Once the trial expires, a persistent license key is required for continued optimization.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Staff Application Section -->
-    <section id="staff" class="py-32 px-6">
-        <div class="max-w-5xl mx-auto glass-card rounded-[40px] p-12 border-cyan-500/20 relative overflow-hidden bg-gradient-to-br from-navy-dark to-navy-deep">
-            <div class="absolute -right-10 top-0 opacity-10">
-                <i data-lucide="contact-2" class="w-[200px] h-[200px] text-cyan-400"></i>
-            </div>
-            <div class="text-center mb-12">
-                <div class="inline-block bg-cyan-500/10 text-cyan-400 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-4">Recruitment Center</div>
-                <h2 class="text-5xl font-black mb-6">JOIN THE REGIFY TEAM</h2>
-                <p class="text-slate-400 max-w-2xl mx-auto">We're looking for active, helpful individuals to join our <span class="text-cyan-400 font-bold">Customer Support</span> team. Help users master Regify and keep our community clean.</p>
-            </div>
-            
-            <div class="grid md:grid-cols-3 gap-8 mb-12">
-                <div class="text-center">
-                    <div class="text-cyan-400 text-2xl mb-2 font-bold uppercase tracking-tighter">Active</div>
-                    <p class="text-xs text-slate-500 uppercase tracking-widest leading-loose">Respond to Discord tickets & help general chat.</p>
-                </div>
-                <div class="text-center">
-                    <div class="text-cyan-400 text-2xl mb-2 font-bold uppercase tracking-tighter">Patient</div>
-                    <p class="text-xs text-slate-500 uppercase tracking-widest leading-loose">Handle user questions with professionalism.</p>
-                </div>
-                <div class="text-center">
-                    <div class="text-cyan-400 text-2xl mb-2 font-bold uppercase tracking-tighter">Informed</div>
-                    <p class="text-xs text-slate-500 uppercase tracking-widest leading-loose">Understand latency and Regify Pro features.</p>
-                </div>
-            </div>
-
-            <div class="text-center">
-                <a href="https://docs.google.com/forms/d/e/1FAIpQLSeI76jBqIsYJqXlRgQW6G7AriSwVnclGZrSGHKDCt5jY21vWg/viewform" target="_blank" class="inline-flex items-center space-x-4 bg-cyan-500 hover:bg-cyan-400 text-black px-12 py-6 rounded-2xl font-black text-xl transition-all shadow-[0_0_40px_rgba(6,182,212,0.4)] uppercase group">
-                    <span>Apply for Staff Position</span>
-                    <i data-lucide="external-link" class="w-6 h-6 group-hover:translate-x-1 transition-transform"></i>
-                </a>
-                <p class="mt-6 text-slate-500 text-[10px] uppercase font-bold tracking-widest">Troll or low-effort applications will be ignored.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Ownership Section -->
-    <section id="team" class="py-32 px-6">
-        <div class="max-w-7xl mx-auto">
-            <h2 class="text-5xl font-black mb-16 text-center tracking-tighter">PROJECT OWNERSHIP</h2>
-            <div class="grid md:grid-cols-2 gap-10">
-                <div class="glass-card p-12 rounded-[40px] border-t-4 border-blue-500" data-aos="fade-up">
-                    <div class="flex flex-col items-center text-center">
-                        <div class="w-24 h-24 bg-blue-600/20 rounded-3xl flex items-center justify-center text-blue-500 mb-8 border border-blue-500/20">
-                            <i data-lucide="crown" class="w-12 h-12"></i>
-                        </div>
-                        <h3 class="text-4xl font-black tracking-tighter mb-2 uppercase">LEGACITY</h3>
-                        <p class="text-blue-500 font-mono text-[10px] uppercase tracking-[0.4em] mb-8 font-bold">Head Developer & CEO</p>
-                        <div class="grid grid-cols-2 gap-4 w-full text-left font-bold text-[10px] text-slate-500 uppercase">
-                            <div class="bg-white/5 p-3 rounded-xl border border-white/5 flex items-center space-x-3">
-                                <i data-lucide="code" class="w-4 h-4 text-blue-400"></i><span>Core Dev</span>
-                            </div>
-                            <div class="bg-white/5 p-3 rounded-xl border border-white/5 flex items-center space-x-3">
-                                <i data-lucide="youtube" class="w-4 h-4 text-red-500"></i><span>Youtube Manager</span>
-                            </div>
-                            <div class="bg-white/5 p-3 rounded-xl border border-white/5 flex items-center space-x-3">
-                                <i data-lucide="video" class="w-4 h-4 text-green-400"></i><span>Content Lead</span>
-                            </div>
-                            <div class="bg-white/5 p-3 rounded-xl border border-white/5 flex items-center space-x-3">
-                                <i data-lucide="globe" class="w-4 h-4 text-cyan-400"></i><span>Web Admin</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="glass-card p-12 rounded-[40px] border-t-4 border-cyan-500" data-aos="fade-up" data-aos-delay="100">
-                    <div class="flex flex-col items-center text-center">
-                        <div class="w-24 h-24 bg-cyan-600/20 rounded-3xl flex items-center justify-center text-cyan-500 mb-8 border border-cyan-500/20">
-                            <i data-lucide="settings" class="w-12 h-12"></i>
-                        </div>
-                        <h3 class="text-4xl font-black tracking-tighter mb-2 uppercase">2MIN</h3>
-                        <p class="text-cyan-500 font-mono text-[10px] uppercase tracking-[0.4em] mb-8 font-bold">Operations Director</p>
-                        <div class="grid grid-cols-2 gap-4 w-full text-left font-bold text-[10px] text-slate-500 uppercase">
-                            <div class="bg-white/5 p-3 rounded-xl border border-white/5 flex items-center space-x-3">
-                                <i data-lucide="handshake" class="w-4 h-4 text-cyan-400"></i><span>Partner Mgr</span>
-                            </div>
-                            <div class="bg-white/5 p-3 rounded-xl border border-white/5 flex items-center space-x-3">
-                                <i data-lucide="messages-square" class="w-4 h-4 text-blue-400"></i><span>Community Mgr</span>
-                            </div>
-                            <div class="bg-white/5 p-3 rounded-xl border border-white/5 flex items-center space-x-3">
-                                <i data-lucide="briefcase" class="w-4 h-4 text-purple-400"></i><span>Logistician</span>
-                            </div>
-                            <div class="bg-white/5 p-3 rounded-xl border border-white/5 flex items-center space-x-3">
-                                <i data-lucide="check-square" class="w-4 h-4 text-yellow-400"></i><span>Staff Lead</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Pricing / License -->
-    <section id="pricing" class="py-32 px-6">
-        <div class="max-w-4xl mx-auto text-center">
-            <div class="glass-card p-16 md:p-24 rounded-[60px] border-2 border-blue-500/40 relative overflow-hidden shadow-[0_0_80px_rgba(37,99,235,0.2)]">
-                <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-transparent via-blue-500 to-transparent"></div>
-                <div class="text-blue-500 font-black tracking-[0.4em] uppercase text-xs mb-8">One-Time Activation License</div>
-                <h2 class="text-6xl md:text-8xl font-black mb-10 tracking-tighter uppercase">Regify Pro</h2>
-                
-                <div class="flex items-center justify-center space-x-8 mb-12">
-                    <span class="text-4xl text-slate-600 price-slash font-bold">$20</span>
-                    <span class="text-9xl font-black text-white tracking-tighter uppercase">$15</span>
-                </div>
-                
-                <div class="grid sm:grid-cols-2 gap-8 text-left mb-16">
-                    <div class="flex items-center space-x-4 bg-white/5 p-6 rounded-3xl">
-                        <i data-lucide="key" class="w-8 h-8 text-blue-500"></i>
-                        <div>
-                            <div class="font-bold text-sm uppercase">Lifetime Key</div>
-                            <p class="text-[10px] text-slate-500 uppercase tracking-widest">No recurring monthly fees</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-4 bg-white/5 p-6 rounded-3xl">
-                        <i data-lucide="refresh-cw" class="w-8 h-8 text-blue-500"></i>
-                        <div>
-                            <div class="font-bold text-sm uppercase">Free Updates</div>
-                            <p class="text-[10px] text-slate-500 uppercase tracking-widest">All V5.x - V6.x builds included</p>
-                        </div>
-                    </div>
-                </div>
-
-                <a href="https://discord.gg/weMb3yDn" target="_blank" class="block w-full bg-blue-600 hover:bg-blue-500 text-white py-8 rounded-[30px] font-black text-3xl transition-all duration-300 transform hover:scale-[1.02] shadow-2xl uppercase tracking-tighter">
-                    Purchase License via Discord
-                </a>
-                <p class="mt-8 text-slate-600 text-[10px] uppercase font-bold tracking-[0.2em] font-mono">AUTHENTICATION REQUIRED FOR ALL FEATURES</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- FAQ -->
-    <section class="py-32 px-6 bg-navy-deep/30">
-        <div class="max-w-3xl mx-auto">
-            <h2 class="text-4xl font-black text-center mb-16 uppercase tracking-tighter">System Info // FAQ</h2>
-            <div class="space-y-4">
-                <details class="glass-card rounded-2xl group transition-all duration-300 overflow-hidden">
-                    <summary class="p-8 font-black text-lg list-none flex justify-between items-center cursor-pointer uppercase">
-                        Is there a free version of Regify?
-                        <i data-lucide="plus" class="w-6 h-6 transition-transform duration-300 text-blue-500"></i>
-                    </summary>
-                    <div class="px-8 pb-8 text-slate-400 text-sm leading-relaxed border-t border-white/5 pt-6">
-                        No. Regify is a professional optimization tool. We offer a <span class="text-white font-bold uppercase tracking-tight">1-Hour Full Pro Access Trial</span> so you can experience the gains before committing to a permanent license key.
-                    </div>
-                </details>
-                <details class="glass-card rounded-2xl group transition-all duration-300 overflow-hidden">
-                    <summary class="p-8 font-black text-lg list-none flex justify-between items-center cursor-pointer uppercase">
-                        Does the license key expire?
-                        <i data-lucide="plus" class="w-6 h-6 transition-transform duration-300 text-blue-500"></i>
-                    </summary>
-                    <div class="px-8 pb-8 text-slate-400 text-sm leading-relaxed border-t border-white/5 pt-6">
-                        The $15 license is a one-time purchase. Once activated on your HWID, you have lifetime access to Regify and all future updates within that version series.
-                    </div>
-                </details>
-                <details class="glass-card rounded-2xl group transition-all duration-300 overflow-hidden">
-                    <summary class="p-8 font-black text-lg list-none flex justify-between items-center cursor-pointer uppercase">
-                        Is Regify safe for competitive games?
-                        <i data-lucide="plus" class="w-6 h-6 transition-transform duration-300 text-blue-500"></i>
-                    </summary>
-                    <div class="px-8 pb-8 text-slate-400 text-sm leading-relaxed border-t border-white/5 pt-6">
-                        Yes. Regify only modifies Windows Registry parameters and system settings. We do not inject into game processes, making it safe for all major anti-cheats (Easy Anti-Cheat, BattlEye, Vanguard).
-                    </div>
-                </details>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="py-20 border-t border-white/5 px-6">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
+<!-- Navigation -->
+<nav>
+    <div style="max-width:1280px; margin:0 auto; padding:14px 24px; display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:38px; height:38px; background:linear-gradient(135deg,#2563eb,#1d4ed8); border-radius:10px; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:18px; box-shadow:0 0 20px rgba(37,99,235,0.4);">R</div>
             <div>
-                <div class="flex items-center space-x-3 mb-4">
-                    <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-white shadow-lg">R</div>
-                    <span class="text-xl font-black tracking-tighter uppercase">REGIFY PRO</span>
+                <div style="font-size:18px; font-weight:800; letter-spacing:-0.05em; line-height:1;">REGIFY</div>
+                <div class="mono" style="font-size:9px; color:#3b82f6; letter-spacing:0.25em; font-weight:500;">V5.1 PRO CORE</div>
+            </div>
+        </div>
+
+        <div style="display:flex; gap:32px; align-items:center;">
+            <a href="#announcement" style="color:#94a3b8; font-size:13px; font-weight:600; text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='#22d3ee'" onmouseout="this.style.color='#94a3b8'">
+                What's New
+            </a>
+            <a href="#features" style="color:#94a3b8; font-size:13px; font-weight:600; text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='#60a5fa'" onmouseout="this.style.color='#94a3b8'">Engine</a>
+            <a href="#team" style="color:#94a3b8; font-size:13px; font-weight:600; text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='#60a5fa'" onmouseout="this.style.color='#94a3b8'">Ownership</a>
+            <a href="#staff" style="color:#06b6d4; font-size:13px; font-weight:700; text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#06b6d4'">Staff Apply</a>
+            <a href="#pricing" style="color:#94a3b8; font-size:13px; font-weight:600; text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='#60a5fa'" onmouseout="this.style.color='#94a3b8'">License</a>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:16px;">
+            <a href="https://discord.gg/weMb3yDn" target="_blank" style="color:#94a3b8; text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">
+                <i data-lucide="message-square" style="width:20px; height:20px;"></i>
+            </a>
+            <a href="#pricing" class="btn-primary" style="padding:10px 24px; border-radius:50px; font-size:11px; font-weight:800; letter-spacing:0.15em; text-transform:uppercase; text-decoration:none; color:#fff; display:inline-block;">Get Key</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero-glow" style="position:relative; padding:160px 24px 120px; text-align:center; overflow:hidden;">
+    <div style="max-width:1000px; margin:0 auto; position:relative; z-index:1;">
+
+        <div class="fade-up delay-1" style="display:inline-flex; align-items:center; gap:8px; background:rgba(37,99,235,0.1); border:1px solid rgba(37,99,235,0.3); padding:8px 20px; border-radius:50px; margin-bottom:40px;">
+            <div style="position:relative; width:8px; height:8px;">
+                <div style="width:8px; height:8px; border-radius:50%; background:#22c55e; position:relative; z-index:1;"></div>
+                <div class="pulse-dot" style="position:absolute; inset:0; border-radius:50%; background:#22c55e;"></div>
+            </div>
+            <span class="mono" style="font-size:10px; font-weight:500; letter-spacing:0.25em; color:#60a5fa; text-transform:uppercase;">V5.1 Full Release Now Live</span>
+        </div>
+
+        <h1 class="fade-up delay-2" style="font-size:clamp(64px,10vw,128px); font-weight:800; line-height:0.9; letter-spacing:-0.04em; margin-bottom:32px;">
+            PURE<br>
+            <span style="background:linear-gradient(135deg, #3b82f6, #06b6d4, #3b82f6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">POWER.</span>
+        </h1>
+
+        <p class="fade-up delay-3" style="color:#94a3b8; font-size:18px; max-width:600px; margin:0 auto 48px; line-height:1.7;">
+            REGIFY V5.1 is a kernel-level Windows performance optimizer. Protected by an encrypted licensing system and <span style="color:#fff; font-weight:700;">Advanced Anti-Malware Layer</span>.
+        </p>
+
+        <div class="fade-up delay-4" style="display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:16px; margin-bottom:60px;">
+            <a href="https://drive.usercontent.google.com/u/0/uc?id=1wFcKlJAqHgmNAlNdtwUOJM-9c7ggEkdl&export=download" target="_blank" class="btn-primary shine" style="padding:20px 48px; border-radius:16px; font-size:18px; font-weight:800; text-decoration:none; color:#fff; display:inline-flex; align-items:center; gap:12px; letter-spacing:-0.02em;">
+                <span>Download Now</span>
+                <i data-lucide="arrow-right" style="width:22px; height:22px;"></i>
+            </a>
+            <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); padding:16px 28px; border-radius:16px; text-align:left;">
+                <div class="mono" style="font-size:9px; color:#64748b; letter-spacing:0.25em; text-transform:uppercase; margin-bottom:4px;">Trial Access</div>
+                <div style="font-size:14px; font-weight:700; color:#3b82f6;">1 Hour Free Pro</div>
+            </div>
+        </div>
+
+        <!-- Terminal Stats Strip -->
+        <div class="fade-up delay-5 glass" style="border-radius:20px; padding:24px 32px; display:inline-flex; flex-wrap:wrap; gap:40px; justify-content:center; position:relative; overflow:hidden;">
+            <div class="scanline"></div>
+            <div style="text-align:center;">
+                <div class="mono" style="font-size:28px; font-weight:500; color:#3b82f6;">↑FPS</div>
+                <div style="font-size:10px; color:#64748b; letter-spacing:0.2em; text-transform:uppercase; margin-top:4px;">Frames Gained</div>
+            </div>
+            <div style="width:1px; background:var(--border);"></div>
+            <div style="text-align:center;">
+                <div class="mono" style="font-size:28px; font-weight:500; color:#06b6d4;">↓PING</div>
+                <div style="font-size:10px; color:#64748b; letter-spacing:0.2em; text-transform:uppercase; margin-top:4px;">Latency Reduced</div>
+            </div>
+            <div style="width:1px; background:var(--border);"></div>
+            <div style="text-align:center;">
+                <div class="mono" style="font-size:28px; font-weight:500; color:#22c55e;">HWID</div>
+                <div style="font-size:10px; color:#64748b; letter-spacing:0.2em; text-transform:uppercase; margin-top:4px;">Locked License</div>
+            </div>
+            <div style="width:1px; background:var(--border);"></div>
+            <div style="text-align:center;">
+                <div class="mono" style="font-size:28px; font-weight:500; color:#f59e0b;">V5.1</div>
+                <div style="font-size:10px; color:#64748b; letter-spacing:0.2em; text-transform:uppercase; margin-top:4px;">Current Build</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="glow-line"></div>
+
+<!-- ===== V5.1 ANNOUNCEMENT SECTION ===== -->
+<section id="announcement" style="padding:100px 24px; background:linear-gradient(180deg, rgba(37,99,235,0.04) 0%, transparent 100%);">
+    <div style="max-width:1100px; margin:0 auto;">
+
+        <!-- Section Header -->
+        <div style="text-align:center; margin-bottom:64px;">
+            <div class="section-num" style="margin-bottom:12px;">// 00 — OFFICIAL ANNOUNCEMENT</div>
+            <div style="display:inline-flex; align-items:center; gap:10px; background:linear-gradient(135deg,rgba(22,163,74,0.15),rgba(16,185,129,0.08)); border:1px solid rgba(22,163,74,0.35); padding:10px 24px; border-radius:50px; margin-bottom:28px;">
+                <i data-lucide="rocket" style="width:16px; height:16px; color:#22c55e;"></i>
+                <span style="font-size:11px; font-weight:700; letter-spacing:0.25em; text-transform:uppercase; color:#22c55e;">Official Release Announcement</span>
+            </div>
+            <h2 style="font-size:clamp(36px,5vw,64px); font-weight:800; letter-spacing:-0.04em; margin-bottom:20px; line-height:1;">
+                Regify V5.1<br>
+                <span style="background:linear-gradient(135deg,#3b82f6,#06b6d4); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Full Release</span>
+            </h2>
+            <p style="color:#64748b; max-width:600px; margin:0 auto; font-size:16px; line-height:1.7;">
+                Following a successful beta launch with overwhelming community feedback, V5.1 is now officially live — bigger, faster, and more secure than ever.
+            </p>
+        </div>
+
+        <!-- Main Announcement Card -->
+        <div class="glass shine" style="border-radius:32px; padding:56px; margin-bottom:32px; border-color:rgba(37,99,235,0.2); position:relative; overflow:hidden;">
+            <!-- Decorative corner glow -->
+            <div style="position:absolute; top:-60px; right:-60px; width:250px; height:250px; background:radial-gradient(circle, rgba(37,99,235,0.12), transparent 70%); pointer-events:none;"></div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:start;">
+                <div>
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:28px;">
+                        <div style="width:4px; height:32px; background:linear-gradient(180deg,#3b82f6,#06b6d4); border-radius:2px;"></div>
+                        <h3 style="font-size:22px; font-weight:800; letter-spacing:-0.02em;">Community Response</h3>
+                    </div>
+                    <p style="color:#94a3b8; line-height:1.8; font-size:15px; margin-bottom:24px;">
+                        Our beta launch gathered invaluable feedback from the community — and the response <span style="color:#fff; font-weight:700;">exceeded all expectations</span>.
+                    </p>
+                    <p style="color:#94a3b8; line-height:1.8; font-size:15px; margin-bottom:32px;">
+                        Users reported significant improvements in both <span style="color:#3b82f6; font-weight:700;">FPS</span> and <span style="color:#06b6d4; font-weight:700;">ping</span>, delivering smoother and more responsive gameplay across the board.
+                    </p>
+                    <p style="color:#64748b; font-size:14px; line-height:1.7; padding:16px 20px; background:rgba(255,255,255,0.03); border-left:3px solid rgba(37,99,235,0.5); border-radius:0 8px 8px 0;">
+                        "This release represents a major step forward in both performance and security, ensuring a safer and more powerful experience for all users."
+                    </p>
                 </div>
-                <p class="text-slate-600 text-[9px] uppercase tracking-widest max-w-xs font-bold leading-relaxed">
-                    Developed by PaxtanTools. Managed by Legacity & 2min. <br>Kernel-level licensing active.
+
+                <div>
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:28px;">
+                        <div style="width:4px; height:32px; background:linear-gradient(180deg,#f59e0b,#ef4444); border-radius:2px;"></div>
+                        <h3 style="font-size:22px; font-weight:800; letter-spacing:-0.02em;">Beta → Full Release</h3>
+                    </div>
+                    <div style="space-y:16px;">
+                        <div style="display:flex; align-items:center; gap:12px; padding:16px; background:rgba(255,255,255,0.03); border-radius:12px; border:1px solid rgba(255,255,255,0.06); margin-bottom:12px;">
+                            <div style="width:32px; height:32px; background:rgba(37,99,235,0.15); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                <i data-lucide="check" style="width:16px; height:16px; color:#3b82f6;"></i>
+                            </div>
+                            <div>
+                                <div style="font-size:13px; font-weight:700; margin-bottom:2px;">Beta Phase Complete</div>
+                                <div class="mono" style="font-size:10px; color:#64748b;">Community feedback collected & processed</div>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:12px; padding:16px; background:rgba(255,255,255,0.03); border-radius:12px; border:1px solid rgba(255,255,255,0.06); margin-bottom:12px;">
+                            <div style="width:32px; height:32px; background:rgba(6,182,212,0.15); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                <i data-lucide="layers" style="width:16px; height:16px; color:#06b6d4;"></i>
+                            </div>
+                            <div>
+                                <div style="font-size:13px; font-weight:700; margin-bottom:2px;">V5.1 Full Build Deployed</div>
+                                <div class="mono" style="font-size:10px; color:#64748b;">All improvements from beta included</div>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:12px; padding:16px; background:rgba(255,255,255,0.03); border-radius:12px; border:1px solid rgba(255,255,255,0.06);">
+                            <div style="width:32px; height:32px; background:rgba(22,163,74,0.15); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                <i data-lucide="shield-check" style="width:16px; height:16px; color:#22c55e;"></i>
+                            </div>
+                            <div>
+                                <div style="font-size:13px; font-weight:700; margin-bottom:2px;">Anti-Malware Active</div>
+                                <div class="mono" style="font-size:10px; color:#64748b;">New security layer fully operational</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- What's New - 3 Feature Cards -->
+        <div style="margin-bottom:16px;">
+            <div class="section-num" style="margin-bottom:16px; text-align:center;">// WHAT'S NEW IN V5.1</div>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px;">
+
+            <!-- Card 1: UI -->
+            <div class="glass" style="border-radius:24px; padding:36px; position:relative; overflow:hidden;">
+                <div style="position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,#3b82f6,#06b6d4);"></div>
+                <div style="width:52px; height:52px; background:rgba(37,99,235,0.15); border-radius:14px; display:flex; align-items:center; justify-content:center; margin-bottom:24px; border:1px solid rgba(37,99,235,0.25);">
+                    <i data-lucide="layout-dashboard" style="width:26px; height:26px; color:#3b82f6;"></i>
+                </div>
+                <div style="display:inline-block; background:rgba(37,99,235,0.12); border:1px solid rgba(37,99,235,0.3); padding:4px 12px; border-radius:50px; margin-bottom:16px;">
+                    <span class="mono" style="font-size:9px; font-weight:500; color:#60a5fa; letter-spacing:0.2em; text-transform:uppercase;">Redesigned</span>
+                </div>
+                <h3 style="font-size:20px; font-weight:800; letter-spacing:-0.02em; margin-bottom:14px;">New User Interface</h3>
+                <p style="color:#64748b; font-size:14px; line-height:1.7;">
+                    A completely updated UI, refined beyond the beta version. Cleaner, more intuitive — and built for speed.
                 </p>
             </div>
-            <div class="flex space-x-10">
-                <a href="https://discord.gg/weMb3yDn" class="text-slate-500 hover:text-blue-500 transition text-[11px] font-black uppercase tracking-widest">Discord</a>
-                <a href="https://www.youtube.com/@RegifyMinecraft" class="text-slate-500 hover:text-blue-500 transition text-[11px] font-black uppercase tracking-widest">YouTube</a>
-                <a href="#staff" class="text-cyan-500 hover:text-white transition text-[11px] font-black uppercase tracking-[0.2em]">Apply for Staff</a>
+
+            <!-- Card 2: Performance -->
+            <div class="glass" style="border-radius:24px; padding:36px; position:relative; overflow:hidden;">
+                <div style="position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,#f59e0b,#ef4444);"></div>
+                <div style="width:52px; height:52px; background:rgba(245,158,11,0.12); border-radius:14px; display:flex; align-items:center; justify-content:center; margin-bottom:24px; border:1px solid rgba(245,158,11,0.2);">
+                    <i data-lucide="zap" style="width:26px; height:26px; color:#f59e0b;"></i>
+                </div>
+                <div style="display:inline-block; background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.25); padding:4px 12px; border-radius:50px; margin-bottom:16px;">
+                    <span class="mono" style="font-size:9px; font-weight:500; color:#fbbf24; letter-spacing:0.2em; text-transform:uppercase;">Enhanced</span>
+                </div>
+                <h3 style="font-size:20px; font-weight:800; letter-spacing:-0.02em; margin-bottom:14px;">Performance Boost</h3>
+                <p style="color:#64748b; font-size:14px; line-height:1.7;">
+                    Additional optimizations beyond the beta. Better stability, higher speed, and greater efficiency — all tuned deeper.
+                </p>
+            </div>
+
+            <!-- Card 3: Anti-Malware -->
+            <div class="glass" style="border-radius:24px; padding:36px; position:relative; overflow:hidden; border-color:rgba(22,163,74,0.2);">
+                <div style="position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,#22c55e,#16a34a);"></div>
+                <div style="width:52px; height:52px; background:rgba(22,163,74,0.12); border-radius:14px; display:flex; align-items:center; justify-content:center; margin-bottom:24px; border:1px solid rgba(22,163,74,0.25);">
+                    <i data-lucide="shield" style="width:26px; height:26px; color:#22c55e;"></i>
+                </div>
+                <div style="display:inline-block; background:rgba(22,163,74,0.12); border:1px solid rgba(22,163,74,0.3); padding:4px 12px; border-radius:50px; margin-bottom:16px;">
+                    <span class="mono" style="font-size:9px; font-weight:500; color:#4ade80; letter-spacing:0.2em; text-transform:uppercase;">New Feature</span>
+                </div>
+                <h3 style="font-size:20px; font-weight:800; letter-spacing:-0.02em; margin-bottom:14px;">Regify Anti-Malware</h3>
+                <p style="color:#64748b; font-size:14px; line-height:1.7; margin-bottom:20px;">
+                    An advanced protection layer built directly into the core. Designed to keep your license and system secure.
+                </p>
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                    <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:#94a3b8;">
+                        <i data-lucide="check-circle" style="width:14px; height:14px; color:#22c55e; flex-shrink:0;"></i>
+                        <span>Prevents cracking attempts</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:#94a3b8;">
+                        <i data-lucide="check-circle" style="width:14px; height:14px; color:#22c55e; flex-shrink:0;"></i>
+                        <span>Blocks reverse engineering</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:#94a3b8;">
+                        <i data-lucide="check-circle" style="width:14px; height:14px; color:#22c55e; flex-shrink:0;"></i>
+                        <span>Detects unauthorized modifications</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<div class="glow-line"></div>
+
+<!-- Features / Engine Section -->
+<section id="features" style="padding:100px 24px; background:var(--bg2);">
+    <div style="max-width:1280px; margin:0 auto;">
+        <div style="display:grid; grid-template-columns:1fr 2fr; gap:64px; align-items:start;">
+
+            <div>
+                <div class="section-num" style="margin-bottom:12px;">// 01 — ENGINE</div>
+                <h2 style="font-size:44px; font-weight:800; letter-spacing:-0.04em; line-height:1; margin-bottom:20px;">TECHNICAL<br>SPECS.</h2>
+                <p style="color:#64748b; font-size:14px; line-height:1.8; margin-bottom:36px;">
+                    Regify V5.1 utilizes direct registry manipulation and CPU scheduler overrides to eliminate input delay at the kernel level.
+                </p>
+                <div style="display:flex; flex-direction:column; gap:0;">
+                    <div class="mono" style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.05); font-size:11px; color:rgba(59,130,246,0.7); text-transform:uppercase; letter-spacing:0.1em;">
+                        <span>TCP_NoDelay</span><span style="color:#22c55e;">ACTIVE</span>
+                    </div>
+                    <div class="mono" style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.05); font-size:11px; color:rgba(59,130,246,0.7); text-transform:uppercase; letter-spacing:0.1em;">
+                        <span>GpuPriority</span><span style="color:#22c55e;">LEVEL 8</span>
+                    </div>
+                    <div class="mono" style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.05); font-size:11px; color:rgba(59,130,246,0.7); text-transform:uppercase; letter-spacing:0.1em;">
+                        <span>SystemResponsiveness</span><span style="color:#22c55e;">OPTIMIZED</span>
+                    </div>
+                    <div class="mono" style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.05); font-size:11px; color:rgba(59,130,246,0.7); text-transform:uppercase; letter-spacing:0.1em;">
+                        <span>NetworkThrottling</span><span style="color:#ef4444;">DISABLED</span>
+                    </div>
+                    <div class="mono" style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.05); font-size:11px; color:rgba(59,130,246,0.7); text-transform:uppercase; letter-spacing:0.1em;">
+                        <span>AntiMalware</span><span style="color:#22c55e;">V5.1 ACTIVE</span>
+                    </div>
+                    <div class="mono" style="display:flex; justify-content:space-between; padding:12px 0; font-size:11px; color:rgba(59,130,246,0.7); text-transform:uppercase; letter-spacing:0.1em;">
+                        <span>HWIDLock</span><span style="color:#22c55e;">ENCRYPTED</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                <div class="glass" style="border-radius:24px; padding:32px;">
+                    <i data-lucide="lock" style="width:36px; height:36px; color:#3b82f6; margin-bottom:20px; display:block;"></i>
+                    <h4 style="font-size:18px; font-weight:800; margin-bottom:12px;">Pro Authentication</h4>
+                    <p style="color:#64748b; font-size:13px; line-height:1.7;">Every license is tied to your unique Hardware ID. Prevents unauthorized usage and ensures your configuration is unique.</p>
+                </div>
+                <div class="glass" style="border-radius:24px; padding:32px;">
+                    <i data-lucide="timer" style="width:36px; height:36px; color:#06b6d4; margin-bottom:20px; display:block;"></i>
+                    <h4 style="font-size:18px; font-weight:800; margin-bottom:12px;">1-Hour Full Trial</h4>
+                    <p style="color:#64748b; font-size:13px; line-height:1.7;">Test the full power before purchasing. A persistent license key is required once the trial period ends.</p>
+                </div>
+                <div class="glass" style="border-radius:24px; padding:32px;">
+                    <i data-lucide="cpu" style="width:36px; height:36px; color:#f59e0b; margin-bottom:20px; display:block;"></i>
+                    <h4 style="font-size:18px; font-weight:800; margin-bottom:12px;">Kernel-Level Tuning</h4>
+                    <p style="color:#64748b; font-size:13px; line-height:1.7;">Goes deeper than surface-level tweaks. Direct scheduler and registry modifications for real gains.</p>
+                </div>
+                <div class="glass" style="border-radius:24px; padding:32px; border-color:rgba(22,163,74,0.2);">
+                    <i data-lucide="shield-check" style="width:36px; height:36px; color:#22c55e; margin-bottom:20px; display:block;"></i>
+                    <h4 style="font-size:18px; font-weight:800; margin-bottom:12px;">Anti-Cheat Safe</h4>
+                    <p style="color:#64748b; font-size:13px; line-height:1.7;">No game process injection. Safe for EAC, BattlEye, and Vanguard. Only Windows-level settings touched.</p>
+                </div>
             </div>
         </div>
-    </footer>
+    </div>
+</section>
 
-    <script>
-        // Initialize AOS
-        AOS.init({ duration: 800, once: true });
+<div class="glow-line"></div>
 
-        // Initialize Lucide Icons
-        lucide.createIcons();
+<!-- Staff Section -->
+<section id="staff" style="padding:100px 24px;">
+    <div style="max-width:960px; margin:0 auto;">
+        <div class="glass shine" style="border-radius:40px; padding:72px; border-color:rgba(6,182,212,0.2); position:relative; overflow:hidden; text-align:center;">
+            <div style="position:absolute; top:-100px; right:-100px; width:400px; height:400px; background:radial-gradient(circle, rgba(6,182,212,0.06), transparent 70%); pointer-events:none;"></div>
 
-        // Custom Cursor Glow
-        const cursor = document.getElementById('cursor');
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-        });
+            <div class="section-num" style="margin-bottom:12px;">// 02 — TEAM</div>
+            <div style="display:inline-block; background:rgba(6,182,212,0.1); border:1px solid rgba(6,182,212,0.3); padding:8px 20px; border-radius:50px; margin-bottom:28px;">
+                <span style="font-size:10px; font-weight:700; letter-spacing:0.25em; text-transform:uppercase; color:#06b6d4;">Recruitment Center</span>
+            </div>
+            <h2 style="font-size:clamp(36px,5vw,60px); font-weight:800; letter-spacing:-0.04em; margin-bottom:20px;">JOIN THE REGIFY TEAM</h2>
+            <p style="color:#94a3b8; max-width:560px; margin:0 auto 56px; font-size:15px; line-height:1.7;">
+                We're looking for active, helpful individuals to join our <span style="color:#06b6d4; font-weight:700;">Customer Support</span> team. Help users master Regify and keep our community running clean.
+            </p>
 
-        // FAQ Toggle Script
-        const details = document.querySelectorAll("details");
-        details.forEach((targetDetail) => {
-            targetDetail.addEventListener("click", () => {
-                details.forEach((detail) => {
-                    if (detail !== targetDetail) {
-                        detail.removeAttribute("open");
-                    }
+            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-bottom:56px;">
+                <div style="padding:24px; background:rgba(255,255,255,0.03); border-radius:16px; border:1px solid rgba(255,255,255,0.06);">
+                    <div style="font-size:20px; font-weight:800; color:#06b6d4; margin-bottom:10px; letter-spacing:-0.02em;">Active</div>
+                    <p style="font-size:12px; color:#64748b; line-height:1.6; text-transform:uppercase; letter-spacing:0.08em;">Respond to Discord tickets & assist in general chat</p>
+                </div>
+                <div style="padding:24px; background:rgba(255,255,255,0.03); border-radius:16px; border:1px solid rgba(255,255,255,0.06);">
+                    <div style="font-size:20px; font-weight:800; color:#06b6d4; margin-bottom:10px; letter-spacing:-0.02em;">Patient</div>
+                    <p style="font-size:12px; color:#64748b; line-height:1.6; text-transform:uppercase; letter-spacing:0.08em;">Handle user questions with professionalism</p>
+                </div>
+                <div style="padding:24px; background:rgba(255,255,255,0.03); border-radius:16px; border:1px solid rgba(255,255,255,0.06);">
+                    <div style="font-size:20px; font-weight:800; color:#06b6d4; margin-bottom:10px; letter-spacing:-0.02em;">Informed</div>
+                    <p style="font-size:12px; color:#64748b; line-height:1.6; text-transform:uppercase; letter-spacing:0.08em;">Understand latency and Regify Pro features</p>
+                </div>
+            </div>
+
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSeI76jBqIsYJqXlRgQW6G7AriSwVnclGZrSGHKDCt5jY21vWg/viewform" target="_blank" class="btn-cyan" style="display:inline-flex; align-items:center; gap:12px; padding:20px 52px; border-radius:16px; font-size:18px; font-weight:800; text-decoration:none; color:#000; text-transform:uppercase; letter-spacing:-0.02em;">
+                <span>Apply for Staff</span>
+                <i data-lucide="external-link" style="width:20px; height:20px;"></i>
+            </a>
+            <p style="margin-top:20px; color:#475569; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; font-family:'DM Mono',monospace;">Low-effort applications will be ignored.</p>
+        </div>
+    </div>
+</section>
+
+<div class="glow-line"></div>
+
+<!-- Ownership Section -->
+<section id="team" style="padding:100px 24px; background:var(--bg2);">
+    <div style="max-width:1100px; margin:0 auto;">
+        <div style="text-align:center; margin-bottom:64px;">
+            <div class="section-num" style="margin-bottom:12px;">// 03 — OWNERSHIP</div>
+            <h2 style="font-size:clamp(36px,5vw,56px); font-weight:800; letter-spacing:-0.04em;">PROJECT LEADERSHIP</h2>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+            <!-- Legacity -->
+            <div class="glass" style="border-radius:32px; padding:52px; border-top:3px solid #3b82f6; text-align:center;">
+                <div style="width:80px; height:80px; background:rgba(37,99,235,0.12); border-radius:20px; display:flex; align-items:center; justify-content:center; margin:0 auto 28px; border:1px solid rgba(37,99,235,0.2);">
+                    <i data-lucide="crown" style="width:40px; height:40px; color:#3b82f6;"></i>
+                </div>
+                <h3 style="font-size:40px; font-weight:800; letter-spacing:-0.04em; margin-bottom:8px;">LEGACITY</h3>
+                <div class="mono" style="font-size:9px; color:#3b82f6; letter-spacing:0.35em; text-transform:uppercase; font-weight:500; margin-bottom:32px;">Head Developer & CEO</div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; text-align:left;">
+                    <div style="background:rgba(255,255,255,0.04); padding:12px 14px; border-radius:10px; border:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; gap:10px;">
+                        <i data-lucide="code" style="width:14px; height:14px; color:#3b82f6; flex-shrink:0;"></i>
+                        <span style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:#94a3b8;">Core Dev</span>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.04); padding:12px 14px; border-radius:10px; border:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; gap:10px;">
+                        <i data-lucide="youtube" style="width:14px; height:14px; color:#ef4444; flex-shrink:0;"></i>
+                        <span style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:#94a3b8;">YT Manager</span>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.04); padding:12px 14px; border-radius:10px; border:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; gap:10px;">
+                        <i data-lucide="video" style="width:14px; height:14px; color:#22c55e; flex-shrink:0;"></i>
+                        <span style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:#94a3b8;">Content Lead</span>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.04); padding:12px 14px; border-radius:10px; border:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; gap:10px;">
+                        <i data-lucide="globe" style="width:14px; height:14px; color:#06b6d4; flex-shrink:0;"></i>
+                        <span style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:#94a3b8;">Web Admin</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2Min -->
+            <div class="glass" style="border-radius:32px; padding:52px; border-top:3px solid #06b6d4; text-align:center;">
+                <div style="width:80px; height:80px; background:rgba(6,182,212,0.1); border-radius:20px; display:flex; align-items:center; justify-content:center; margin:0 auto 28px; border:1px solid rgba(6,182,212,0.2);">
+                    <i data-lucide="settings" style="width:40px; height:40px; color:#06b6d4;"></i>
+                </div>
+                <h3 style="font-size:40px; font-weight:800; letter-spacing:-0.04em; margin-bottom:8px;">2MIN</h3>
+                <div class="mono" style="font-size:9px; color:#06b6d4; letter-spacing:0.35em; text-transform:uppercase; font-weight:500; margin-bottom:32px;">Operations Director</div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; text-align:left;">
+                    <div style="background:rgba(255,255,255,0.04); padding:12px 14px; border-radius:10px; border:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; gap:10px;">
+                        <i data-lucide="handshake" style="width:14px; height:14px; color:#06b6d4; flex-shrink:0;"></i>
+                        <span style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:#94a3b8;">Partner Mgr</span>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.04); padding:12px 14px; border-radius:10px; border:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; gap:10px;">
+                        <i data-lucide="messages-square" style="width:14px; height:14px; color:#3b82f6; flex-shrink:0;"></i>
+                        <span style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:#94a3b8;">Community</span>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.04); padding:12px 14px; border-radius:10px; border:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; gap:10px;">
+                        <i data-lucide="briefcase" style="width:14px; height:14px; color:#a78bfa; flex-shrink:0;"></i>
+                        <span style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:#94a3b8;">Logistician</span>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.04); padding:12px 14px; border-radius:10px; border:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; gap:10px;">
+                        <i data-lucide="check-square" style="width:14px; height:14px; color:#fbbf24; flex-shrink:0;"></i>
+                        <span style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:#94a3b8;">Staff Lead</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="glow-line"></div>
+
+<!-- Pricing Section -->
+<section id="pricing" style="padding:100px 24px;">
+    <div style="max-width:800px; margin:0 auto; text-align:center;">
+        <div class="section-num" style="margin-bottom:12px;">// 04 — LICENSE</div>
+        <div class="glass shine" style="border-radius:48px; padding:80px; border:2px solid rgba(37,99,235,0.35); box-shadow:0 0 80px rgba(37,99,235,0.12); position:relative; overflow:hidden;">
+            <div style="position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,#3b82f6,#06b6d4,transparent);"></div>
+
+            <div class="mono" style="font-size:10px; color:#3b82f6; letter-spacing:0.35em; text-transform:uppercase; font-weight:500; margin-bottom:20px;">One-Time Activation License</div>
+            <h2 style="font-size:clamp(48px,7vw,80px); font-weight:800; letter-spacing:-0.04em; margin-bottom:40px;">REGIFY PRO</h2>
+
+            <div style="display:flex; align-items:center; justify-content:center; gap:24px; margin-bottom:48px;">
+                <span class="price-slash" style="font-size:40px; font-weight:700; color:#475569;">$20</span>
+                <span style="font-size:100px; font-weight:800; letter-spacing:-0.05em; line-height:1;">$15</span>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; text-align:left; margin-bottom:48px;">
+                <div style="display:flex; align-items:center; gap:14px; background:rgba(255,255,255,0.04); padding:20px 24px; border-radius:20px; border:1px solid rgba(255,255,255,0.07);">
+                    <i data-lucide="key" style="width:28px; height:28px; color:#3b82f6; flex-shrink:0;"></i>
+                    <div>
+                        <div style="font-size:13px; font-weight:800; text-transform:uppercase; margin-bottom:4px;">Lifetime Key</div>
+                        <div class="mono" style="font-size:10px; color:#64748b; letter-spacing:0.1em;">No recurring monthly fees</div>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:14px; background:rgba(255,255,255,0.04); padding:20px 24px; border-radius:20px; border:1px solid rgba(255,255,255,0.07);">
+                    <i data-lucide="refresh-cw" style="width:28px; height:28px; color:#3b82f6; flex-shrink:0;"></i>
+                    <div>
+                        <div style="font-size:13px; font-weight:800; text-transform:uppercase; margin-bottom:4px;">Free Updates</div>
+                        <div class="mono" style="font-size:10px; color:#64748b; letter-spacing:0.1em;">All V5.x – V6.x builds included</div>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:14px; background:rgba(255,255,255,0.04); padding:20px 24px; border-radius:20px; border:1px solid rgba(255,255,255,0.07);">
+                    <i data-lucide="shield" style="width:28px; height:28px; color:#22c55e; flex-shrink:0;"></i>
+                    <div>
+                        <div style="font-size:13px; font-weight:800; text-transform:uppercase; margin-bottom:4px;">Anti-Malware</div>
+                        <div class="mono" style="font-size:10px; color:#64748b; letter-spacing:0.1em;">V5.1 security layer included</div>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:14px; background:rgba(255,255,255,0.04); padding:20px 24px; border-radius:20px; border:1px solid rgba(255,255,255,0.07);">
+                    <i data-lucide="cpu" style="width:28px; height:28px; color:#06b6d4; flex-shrink:0;"></i>
+                    <div>
+                        <div style="font-size:13px; font-weight:800; text-transform:uppercase; margin-bottom:4px;">New UI Included</div>
+                        <div class="mono" style="font-size:10px; color:#64748b; letter-spacing:0.1em;">V5.1 redesigned interface</div>
+                    </div>
+                </div>
+            </div>
+
+            <a href="https://discord.gg/weMb3yDn" target="_blank" class="btn-primary" style="display:block; padding:28px; border-radius:24px; font-size:22px; font-weight:800; text-decoration:none; color:#fff; text-transform:uppercase; letter-spacing:-0.02em;">
+                Purchase License via Discord
+            </a>
+            <div class="mono" style="margin-top:20px; font-size:9px; color:#475569; letter-spacing:0.25em; text-transform:uppercase;">Authentication Required — HWID Locked</div>
+        </div>
+    </div>
+</section>
+
+<div class="glow-line"></div>
+
+<!-- FAQ -->
+<section style="padding:100px 24px; background:var(--bg2);">
+    <div style="max-width:760px; margin:0 auto;">
+        <div style="text-align:center; margin-bottom:64px;">
+            <div class="section-num" style="margin-bottom:12px;">// 05 — FAQ</div>
+            <h2 style="font-size:44px; font-weight:800; letter-spacing:-0.04em;">System Info</h2>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+
+            <details class="glass" style="border-radius:20px; border:1px solid rgba(255,255,255,0.06);">
+                <summary style="padding:28px 32px; font-size:16px; font-weight:700; list-style:none; display:flex; justify-content:space-between; align-items:center; cursor:pointer; text-transform:uppercase; letter-spacing:-0.01em;">
+                    Is there a free version of Regify?
+                    <i data-lucide="plus" class="faq-icon" style="width:20px; height:20px; transition:transform 0.3s; color:#3b82f6; flex-shrink:0;"></i>
+                </summary>
+                <div style="padding:0 32px 28px; color:#64748b; font-size:14px; line-height:1.8; border-top:1px solid rgba(255,255,255,0.05); padding-top:20px; margin-top:0;">
+                    No. Regify is a professional-grade tool. We offer a <span style="color:#fff; font-weight:700;">1-Hour Full Pro Access Trial</span> so you can experience real gains before committing to a license.
+                </div>
+            </details>
+
+            <details class="glass" style="border-radius:20px; border:1px solid rgba(255,255,255,0.06);">
+                <summary style="padding:28px 32px; font-size:16px; font-weight:700; list-style:none; display:flex; justify-content:space-between; align-items:center; cursor:pointer; text-transform:uppercase; letter-spacing:-0.01em;">
+                    Does the license key expire?
+                    <i data-lucide="plus" class="faq-icon" style="width:20px; height:20px; transition:transform 0.3s; color:#3b82f6; flex-shrink:0;"></i>
+                </summary>
+                <div style="padding:0 32px 28px; color:#64748b; font-size:14px; line-height:1.8; border-top:1px solid rgba(255,255,255,0.05); padding-top:20px; margin-top:0;">
+                    The $15 license is a one-time purchase. Once activated on your HWID, you have lifetime access to Regify and all future updates within the V5.x–V6.x version series.
+                </div>
+            </details>
+
+            <details class="glass" style="border-radius:20px; border:1px solid rgba(255,255,255,0.06);">
+                <summary style="padding:28px 32px; font-size:16px; font-weight:700; list-style:none; display:flex; justify-content:space-between; align-items:center; cursor:pointer; text-transform:uppercase; letter-spacing:-0.01em;">
+                    Is Regify safe for competitive games?
+                    <i data-lucide="plus" class="faq-icon" style="width:20px; height:20px; transition:transform 0.3s; color:#3b82f6; flex-shrink:0;"></i>
+                </summary>
+                <div style="padding:0 32px 28px; color:#64748b; font-size:14px; line-height:1.8; border-top:1px solid rgba(255,255,255,0.05); padding-top:20px; margin-top:0;">
+                    Yes. Regify only modifies Windows Registry parameters and system settings. We do not inject into game processes, making it safe for EAC, BattlEye, and Vanguard.
+                </div>
+            </details>
+
+            <details class="glass" style="border-radius:20px; border:1px solid rgba(255,255,255,0.06);">
+                <summary style="padding:28px 32px; font-size:16px; font-weight:700; list-style:none; display:flex; justify-content:space-between; align-items:center; cursor:pointer; text-transform:uppercase; letter-spacing:-0.01em;">
+                    What is the Regify Anti-Malware system?
+                    <i data-lucide="plus" class="faq-icon" style="width:20px; height:20px; transition:transform 0.3s; color:#3b82f6; flex-shrink:0;"></i>
+                </summary>
+                <div style="padding:0 32px 28px; color:#64748b; font-size:14px; line-height:1.8; border-top:1px solid rgba(255,255,255,0.05); padding-top:20px; margin-top:0;">
+                    Introduced in V5.1, Regify Anti-Malware is a new protection layer built into the core. It prevents cracking attempts, blocks reverse engineering, and detects unauthorized modifications to ensure your installation is always legitimate and secure.
+                </div>
+            </details>
+
+            <details class="glass" style="border-radius:20px; border:1px solid rgba(255,255,255,0.06);">
+                <summary style="padding:28px 32px; font-size:16px; font-weight:700; list-style:none; display:flex; justify-content:space-between; align-items:center; cursor:pointer; text-transform:uppercase; letter-spacing:-0.01em;">
+                    What changed from beta to full release?
+                    <i data-lucide="plus" class="faq-icon" style="width:20px; height:20px; transition:transform 0.3s; color:#3b82f6; flex-shrink:0;"></i>
+                </summary>
+                <div style="padding:0 32px 28px; color:#64748b; font-size:14px; line-height:1.8; border-top:1px solid rgba(255,255,255,0.05); padding-top:20px; margin-top:0;">
+                    V5.1 Full includes a completely redesigned UI, additional performance optimizations based on beta feedback, and the all-new Regify Anti-Malware protection layer. The full release is a significant upgrade over the beta in every aspect.
+                </div>
+            </details>
+
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer style="padding:64px 24px; border-top:1px solid rgba(255,255,255,0.05);">
+    <div style="max-width:1280px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:32px;">
+        <div>
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+                <div style="width:32px; height:32px; background:linear-gradient(135deg,#2563eb,#1d4ed8); border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:14px; box-shadow:0 0 15px rgba(37,99,235,0.3);">R</div>
+                <span style="font-size:16px; font-weight:800; letter-spacing:-0.04em; text-transform:uppercase;">REGIFY PRO</span>
+            </div>
+            <p class="mono" style="font-size:9px; color:#475569; letter-spacing:0.15em; text-transform:uppercase; line-height:2; max-width:280px;">
+                Developed by PaxtanTools.<br>
+                Managed by Legacity & 2min.<br>
+                V5.1 — Kernel-level licensing active.
+            </p>
+        </div>
+        <div style="display:flex; gap:32px; align-items:center; flex-wrap:wrap;">
+            <a href="https://discord.gg/weMb3yDn" target="_blank" style="color:#64748b; text-decoration:none; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.2em; transition:color 0.2s;" onmouseover="this.style.color='#3b82f6'" onmouseout="this.style.color='#64748b'">Discord</a>
+            <a href="https://www.youtube.com/@RegifyMinecraft" target="_blank" style="color:#64748b; text-decoration:none; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.2em; transition:color 0.2s;" onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='#64748b'">YouTube</a>
+            <a href="#announcement" style="color:#64748b; text-decoration:none; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.2em; transition:color 0.2s;" onmouseover="this.style.color='#22c55e'" onmouseout="this.style.color='#64748b'">V5.1 Release</a>
+            <a href="#staff" style="color:#06b6d4; text-decoration:none; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.2em; transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#06b6d4'">Apply for Staff</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Lucide
+    lucide.createIcons();
+
+    // Cursor Glow
+    const glow = document.getElementById('cursor-glow');
+    document.addEventListener('mousemove', e => {
+        glow.style.left = e.clientX + 'px';
+        glow.style.top = e.clientY + 'px';
+    });
+
+    // FAQ accordion — only one open at a time
+    document.querySelectorAll('details').forEach(d => {
+        d.addEventListener('toggle', () => {
+            if (d.open) {
+                document.querySelectorAll('details').forEach(other => {
+                    if (other !== d) other.removeAttribute('open');
                 });
-            });
+            }
         });
-    </script>
+    });
+</script>
 </body>
 </html>
