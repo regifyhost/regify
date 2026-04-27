@@ -3,385 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>REGIFY V5.1 | Under Maintenance</title>
+    <title>REGIFY V5.1 | Full Release Live</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Outfit:wght@300;400;600;800&family=DM+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #080808;
-            --bg2: #0d0d0d;
-            --red: #dc2626;
-            --red-light: #ef4444;
-            --border: rgba(255,255,255,0.06);
-            --border-red: rgba(220,38,38,0.22);
-            --glass: rgba(14,8,8,0.65);
+            --bg: #030303;
+            --primary: #3b82f6;
+            --accent: #22d3ee;
+            --cursive: 'Dancing Script', cursive;
         }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
+        
         body {
-            background: var(--bg);
-            color: #f1f5f9;
-            font-family: 'Syne', sans-serif;
-            min-height: 100vh;
+            background-color: var(--bg);
+            color: #ffffff;
+            font-family: 'Outfit', sans-serif;
             overflow-x: hidden;
+            line-height: 1.6;
         }
+
+        .cursive { font-family: var(--cursive); }
         .mono { font-family: 'DM Mono', monospace; }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #080808; }
-        ::-webkit-scrollbar-thumb { background: #3f0000; border-radius: 10px; }
 
-        .grid-bg {
-            position: fixed; inset: 0; z-index: 0;
-            background-image:
-                linear-gradient(rgba(220,38,38,0.032) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(220,38,38,0.032) 1px, transparent 1px);
-            background-size: 44px 44px;
-        }
-        .center-glow {
-            position: fixed; top: 35%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 1000px; height: 700px;
-            background: radial-gradient(ellipse, rgba(180,10,10,0.07) 0%, transparent 65%);
-            pointer-events: none; z-index: 0;
+        /* Modern Mesh Background */
+        .mesh-gradient {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: 
+                radial-gradient(at 10% 10%, rgba(59, 130, 246, 0.12) 0px, transparent 40%),
+                radial-gradient(at 90% 90%, rgba(34, 211, 238, 0.08) 0px, transparent 40%);
+            z-index: -1;
         }
 
-        /* Ticker */
-        .warn-bar {
-            position: sticky; top: 0; z-index: 50;
-            background: linear-gradient(90deg, rgba(220,38,38,0.18), rgba(220,38,38,0.1), rgba(220,38,38,0.18));
-            border-bottom: 1px solid rgba(220,38,38,0.35);
-            padding: 10px 0; overflow: hidden;
+        /* Responsive Glass Cards */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        @keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
-        .ticker-inner { display:inline-flex; animation:ticker 22s linear infinite; white-space:nowrap; }
-
-        /* Glass */
-        .glass {
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-red);
-            transition: border-color 0.3s, background 0.3s;
-        }
-        .glass:hover { border-color: rgba(220,38,38,0.42); }
-
-        .glow-line { height:1px; background:linear-gradient(90deg,transparent,rgba(220,38,38,0.55),transparent); }
-
-        /* Pulse */
-        @keyframes pulse-ring { 0%{transform:scale(1);opacity:.8} 100%{transform:scale(2.4);opacity:0} }
-        .pulse-wrap { position:relative; width:10px; height:10px; flex-shrink:0; }
-        .pulse-core { width:10px;height:10px;border-radius:50%;background:#ef4444;position:absolute;z-index:1; }
-        .pulse-ring { position:absolute;inset:0;border-radius:50%;background:#ef4444;animation:pulse-ring 1.4s ease-out infinite; }
-
-        /* Icon box */
-        @keyframes icon-glow { 0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,0.35)} 50%{box-shadow:0 0 0 18px rgba(220,38,38,0)} }
-        .icon-box {
-            width:96px;height:96px;background:rgba(220,38,38,0.1);border:2px solid rgba(220,38,38,0.3);
-            border-radius:26px;display:flex;align-items:center;justify-content:center;
-            margin:0 auto 32px;animation:icon-glow 2.5s ease-out infinite;
+        .glass-card:hover {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-8px);
         }
 
-        /* Scanline */
-        @keyframes scanline { 0%{top:-10%} 100%{top:110%} }
-        .scanline { position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(220,38,38,0.12),transparent);animation:scanline 4s linear infinite;pointer-events:none; }
-
-        /* Shine */
-        .shine { position:relative;overflow:hidden; }
-        .shine::after { content:'';position:absolute;top:-50%;left:-75%;width:50%;height:200%;background:linear-gradient(120deg,transparent,rgba(255,255,255,0.04),transparent);transform:skewX(-20deg);animation:shine 5s ease-in-out infinite; }
-        @keyframes shine { 0%,70%{left:-75%} 100%{left:125%} }
-
-        /* Fade up */
-        @keyframes fadeUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
-        .fu{animation:fadeUp .6s ease forwards}
-        .d1{animation-delay:.05s;opacity:0} .d2{animation-delay:.15s;opacity:0} .d3{animation-delay:.27s;opacity:0}
-        .d4{animation-delay:.4s;opacity:0} .d5{animation-delay:.54s;opacity:0} .d6{animation-delay:.68s;opacity:0}
-
-        /* Discord btn */
-        .btn-discord {
-            display:inline-flex;align-items:center;gap:12px;
-            background:#5865F2;box-shadow:0 0 40px rgba(88,101,242,0.4);
-            border-radius:16px;padding:20px 48px;font-size:16px;font-weight:800;
-            text-decoration:none;color:#fff;letter-spacing:-0.02em;text-transform:uppercase;transition:all .3s;
+        /* Animations */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .btn-discord:hover { box-shadow:0 0 65px rgba(88,101,242,0.65);transform:scale(1.03); }
+        .animate-reveal { animation: fadeUp 1s ease-out forwards; }
+        .delay-1 { animation-delay: 0.2s; opacity: 0; }
+        .delay-2 { animation-delay: 0.4s; opacity: 0; }
 
-        /* Reason item */
-        .reason {
-            display:flex;align-items:flex-start;gap:16px;padding:22px 24px;
-            background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:16px;
-            transition:border-color .25s,background .25s;
-        }
-        .reason:hover { border-color:rgba(220,38,38,0.3);background:rgba(220,38,38,0.04); }
-        .reason-num { font-family:'DM Mono',monospace;font-size:10px;font-weight:500;color:rgba(220,38,38,0.55);letter-spacing:.2em;flex-shrink:0;margin-top:2px; }
-
-        /* FAQ */
-        details summary::-webkit-details-marker { display:none; }
-        details[open] .faq-icon { transform:rotate(45deg);color:#ef4444; }
-        details[open] { border-color:rgba(220,38,38,0.4) !important;background:rgba(220,38,38,0.04) !important; }
-
-        #cursor-glow {
-            width:350px;height:350px;
-            background:radial-gradient(circle,rgba(220,38,38,0.045) 0%,transparent 70%);
-            position:fixed;pointer-events:none;z-index:9999;
-            transform:translate(-50%,-50%);transition:left .08s,top .08s;
+        /* Payment Icons Styling */
+        .pay-method {
+            padding: 12px 20px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
         }
 
-        .section-label { font-family:'DM Mono',monospace;font-size:10px;color:rgba(220,38,38,0.55);letter-spacing:.35em;text-transform:uppercase;margin-bottom:12px; }
+        /* Responsive Button */
+        .btn-download {
+            background: linear-gradient(135deg, #fff 0%, #d1d5db 100%);
+            color: #000;
+            padding: 16px 32px;
+            border-radius: 50px;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            transition: 0.3s;
+            box-shadow: 0 0 25px rgba(255,255,255,0.2);
+        }
+        .btn-download:hover {
+            box-shadow: 0 0 40px rgba(59, 130, 246, 0.5);
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body>
-<div class="grid-bg"></div>
-<div class="center-glow"></div>
-<div id="cursor-glow"></div>
+    <div class="mesh-gradient"></div>
 
-<!-- Ticker -->
-<div class="warn-bar">
-    <div class="ticker-inner">
-        <span style="font-size:10px;font-weight:700;letter-spacing:.3em;color:#f87171;text-transform:uppercase;padding:0 40px;">
-            🔴 REGIFY UNDER MAINTENANCE &nbsp;·&nbsp; API & DATABASE MIGRATION IN PROGRESS &nbsp;·&nbsp; OLDER MODELS STILL FUNCTIONAL &nbsp;·&nbsp; JOIN DISCORD FOR PURCHASES & SUPPORT &nbsp;·&nbsp; SORRY FOR THE INCONVENIENCE &nbsp;·&nbsp;
-        </span>
-        <span style="font-size:10px;font-weight:700;letter-spacing:.3em;color:#f87171;text-transform:uppercase;padding:0 40px;">
-            🔴 REGIFY UNDER MAINTENANCE &nbsp;·&nbsp; API & DATABASE MIGRATION IN PROGRESS &nbsp;·&nbsp; OLDER MODELS STILL FUNCTIONAL &nbsp;·&nbsp; JOIN DISCORD FOR PURCHASES & SUPPORT &nbsp;·&nbsp; SORRY FOR THE INCONVENIENCE &nbsp;·&nbsp;
-        </span>
-    </div>
-</div>
-
-<!-- ===== HERO ===== -->
-<section style="padding:100px 24px 80px;text-align:center;position:relative;overflow:hidden;">
-    <div style="max-width:860px;margin:0 auto;position:relative;z-index:1;">
-
-        <!-- Logo -->
-        <div class="fu d1" style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:52px;">
-            <div style="width:44px;height:44px;background:linear-gradient(135deg,#dc2626,#991b1b);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:21px;box-shadow:0 0 24px rgba(220,38,38,0.45);">R</div>
-            <div style="text-align:left;">
-                <div style="font-size:20px;font-weight:800;letter-spacing:-.05em;line-height:1;">REGIFY</div>
-                <div class="mono" style="font-size:9px;color:#ef4444;letter-spacing:.25em;">V5.1 PRO CORE</div>
-            </div>
+    <nav class="p-6 md:p-8 flex justify-between items-center relative z-50">
+        <div class="text-xl md:text-2xl font-black tracking-tighter">REGIFY <span class="text-blue-500">V5.1</span></div>
+        <div class="flex gap-4 md:gap-8 items-center">
+            <a href="https://discord.gg/weMb3yDn" class="text-xs font-bold hover:text-blue-400 transition hidden sm:block">DISCORD</a>
+            <a href="https://drive.usercontent.google.com/download?id=1YZsE10xBX91e1tRFAfmtQ26v-SOnYWoM&export=download&authuser=0" class="text-[10px] bg-white/10 px-4 py-2 rounded-full font-bold hover:bg-white/20 transition">DOWNLOAD NOW</a>
         </div>
+    </nav>
 
-        <!-- Status badge -->
-        <div class="fu d2" style="display:inline-flex;align-items:center;gap:10px;background:rgba(220,38,38,0.1);border:1px solid rgba(220,38,38,0.35);padding:8px 22px;border-radius:50px;margin-bottom:36px;">
-            <div class="pulse-wrap"><div class="pulse-ring"></div><div class="pulse-core"></div></div>
-            <span class="mono" style="font-size:10px;font-weight:500;letter-spacing:.25em;color:#f87171;text-transform:uppercase;">System Maintenance Active</span>
-        </div>
-
-        <!-- Icon -->
-        <div class="fu d2"><div class="icon-box"><i data-lucide="wrench" style="width:46px;height:46px;color:#ef4444;"></i></div></div>
-
-        <!-- Headline -->
-        <h1 class="fu d3" style="font-size:clamp(60px,10vw,118px);font-weight:800;line-height:.9;letter-spacing:-.04em;margin-bottom:28px;">
-            UNDER<br>
-            <span style="background:linear-gradient(135deg,#dc2626,#ef4444,#dc2626);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">MAINTENANCE.</span>
+    <section class="min-h-[80vh] flex flex-col justify-center items-center text-center px-6 py-20">
+        <span class="cursive text-3xl md:text-5xl text-blue-400 mb-4 animate-reveal">Beyond the features,</span>
+        <h1 class="text-5xl md:text-[100px] font-extrabold leading-tight tracking-tighter mb-6 animate-reveal delay-1">
+            FULL <span class="italic text-transparent bg-clip-text bg-gradient-to-b from-white to-blue-500">RELEASE.</span>
         </h1>
+        <p class="max-w-2xl text-gray-400 text-base md:text-lg mb-10 animate-reveal delay-2">
+            The evolution is complete. We've upgraded the V5.1 feature core with professional-grade UI rendering and internal safety protocols. This is the stable, definitive experience.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-4 animate-reveal delay-2">
+            <a href="https://drive.usercontent.google.com/download?id=1YZsE10xBX91e1tRFAfmtQ26v-SOnYWoM&export=download&authuser=0" class="btn-download">
+                <i data-lucide="download-cloud"></i>
+                DOWNLOAD V5.1 FULL
+            </a>
+            <a href="https://discord.gg/weMb3yDn" class="px-8 py-4 rounded-full border border-white/10 hover:bg-white/5 transition flex items-center justify-center gap-2 font-bold">
+                <i data-lucide="message-circle"></i>
+                OPEN A TICKET
+            </a>
+        </div>
+    </section>
 
-        <!-- Announcement card -->
-        <div class="fu d4 glass shine" style="border-radius:24px;padding:36px 44px;margin:0 auto 40px;max-width:700px;text-align:left;position:relative;overflow:hidden;">
-            <div class="scanline"></div>
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;">
-                <i data-lucide="megaphone" style="width:17px;height:17px;color:#ef4444;flex-shrink:0;"></i>
-                <span class="mono" style="font-size:10px;font-weight:500;letter-spacing:.25em;color:#ef4444;text-transform:uppercase;">Official Announcement</span>
+    <section class="py-20 px-6 max-w-6xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <div class="glass-card p-8 md:p-12 rounded-[32px]">
+                <span class="mono text-[10px] text-blue-500 tracking-widest uppercase mb-4 block">Full Release Additions</span>
+                <h2 class="text-3xl font-bold mb-6">What's the difference?</h2>
+                <div class="space-y-4">
+                    <div class="flex gap-4 items-start">
+                        <div class="p-2 bg-blue-500/10 rounded-lg"><i data-lucide="refresh-cw" class="w-4 h-4 text-blue-400"></i></div>
+                        <p class="text-sm text-gray-400"><b class="text-white">Feature Integration:</b> All original Beta tweaks for latency and registry are now 100% stable.</p>
+                    </div>
+                    <div class="flex gap-4 items-start">
+                        <div class="p-2 bg-blue-500/10 rounded-lg"><i data-lucide="shield" class="w-4 h-4 text-blue-400"></i></div>
+                        <p class="text-sm text-gray-400"><b class="text-white">Safety Hardening:</b> Internal app obfuscation to prevent system flags and ensure user privacy.</p>
+                    </div>
+                    <div class="flex gap-4 items-start">
+                        <div class="p-2 bg-blue-500/10 rounded-lg"><i data-lucide="palette" class="w-4 h-4 text-blue-400"></i></div>
+                        <p class="text-sm text-gray-400"><b class="text-white">Modern UI:</b> A total overhaul of the app interface with hardware-accelerated visuals.</p>
+                    </div>
+                </div>
             </div>
-            <p style="color:#cbd5e1;font-size:15px;line-height:1.85;margin-bottom:16px;">
-                <span style="color:#fff;font-weight:800;">@everyone</span> — Regify is currently under maintenance. We are shifting the app to a <span style="color:#ef4444;font-weight:700;">new API and Database</span>. Sorry for the inconvenience.
-            </p>
-            <div style="display:flex;align-items:center;gap:10px;padding:14px 18px;background:rgba(34,197,94,0.07);border:1px solid rgba(34,197,94,0.2);border-radius:12px;">
-                <i data-lucide="check-circle" style="width:16px;height:16px;color:#22c55e;flex-shrink:0;"></i>
-                <p style="color:#94a3b8;font-size:13px;line-height:1.6;">
-                    You can still use <span style="color:#fff;font-weight:700;">older models of Regify</span> in the meantime. We appreciate your patience.
+
+            <div class="glass-card p-8 md:p-12 rounded-[32px] border-blue-500/20">
+                <span class="mono text-[10px] text-blue-500 tracking-widest uppercase mb-4 block">Acquisition</span>
+                <h2 class="text-3xl font-bold mb-6">Payment Methods</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                    <div class="pay-method">
+                        <i data-lucide="landmark" class="text-blue-400 w-4 h-4"></i>
+                        <span>IBAN Bank Transfer</span>
+                    </div>
+                    <div class="pay-method">
+                        <i data-lucide="wallet" class="text-blue-400 w-4 h-4"></i>
+                        <span>Binance / Crypto</span>
+                    </div>
+                    <div class="pay-method">
+                        <i data-lucide="coins" class="text-blue-400 w-4 h-4"></i>
+                        <span>Phantom Wallet</span>
+                    </div>
+                    <div class="pay-method">
+                        <i data-lucide="ticket" class="text-blue-400 w-4 h-4"></i>
+                        <span>Trades / Tickets</span>
+                    </div>
+                </div>
+                <p class="text-[11px] text-gray-500 mono bg-white/5 p-4 rounded-xl">
+                    NOTE: Trades vary significantly. For custom trade-ins or specific payment inquiries, please open a ticket in our official Discord.
                 </p>
             </div>
-        </div>
-
-        <!-- Discord CTA -->
-        <div class="fu d5">
-            <a href="https://discord.gg/weMb3yDn" target="_blank" class="btn-discord">
-                <i data-lucide="message-square" style="width:22px;height:22px;"></i>
-                <span>Join Our Discord</span>
-                <i data-lucide="arrow-right" style="width:20px;height:20px;"></i>
-            </a>
-            <p class="mono" style="margin-top:16px;font-size:9px;color:#475569;letter-spacing:.2em;text-transform:uppercase;">Purchases · Support · Live Updates</p>
-        </div>
-
-    </div>
-</section>
-
-<div class="glow-line"></div>
-
-<!-- ===== REASONS ===== -->
-<section style="padding:80px 24px;background:var(--bg2);">
-    <div style="max-width:860px;margin:0 auto;">
-        <div style="text-align:center;margin-bottom:48px;">
-            <div class="section-label">// WHY WE'RE DOWN</div>
-            <h2 style="font-size:clamp(30px,5vw,52px);font-weight:800;letter-spacing:-.04em;">REASONS FOR <span style="color:#ef4444;">MAINTENANCE</span></h2>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:14px;">
-
-            <div class="reason">
-                <span class="reason-num">01</span>
-                <div>
-                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-                        <i data-lucide="server" style="width:15px;height:15px;color:#ef4444;flex-shrink:0;"></i>
-                        <div style="font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:-.01em;">New API Migration</div>
-                    </div>
-                    <p style="color:#64748b;font-size:13px;line-height:1.75;">We're fully migrating Regify to a new API backend. This is required to deliver faster response times, greater reliability, and a solid foundation for upcoming features.</p>
-                </div>
-            </div>
-
-            <div class="reason">
-                <span class="reason-num">02</span>
-                <div>
-                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-                        <i data-lucide="database" style="width:15px;height:15px;color:#ef4444;flex-shrink:0;"></i>
-                        <div style="font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:-.01em;">Database Overhaul</div>
-                    </div>
-                    <p style="color:#64748b;font-size:13px;line-height:1.75;">Our entire database is being replaced with a more robust system. This means faster license lookups, more secure HWID binding, and a more reliable storage layer overall.</p>
-                </div>
-            </div>
-
-            <div class="reason">
-                <span class="reason-num">03</span>
-                <div>
-                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-                        <i data-lucide="shield" style="width:15px;height:15px;color:#ef4444;flex-shrink:0;"></i>
-                        <div style="font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:-.01em;">Security Hardening</div>
-                    </div>
-                    <p style="color:#64748b;font-size:13px;line-height:1.75;">The infrastructure transition lets us reinforce anti-malware and anti-crack protection at a deeper level — keeping your license and system more secure than ever before.</p>
-                </div>
-            </div>
-
-            <div class="reason">
-                <span class="reason-num">04</span>
-                <div>
-                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-                        <i data-lucide="zap" style="width:15px;height:15px;color:#ef4444;flex-shrink:0;"></i>
-                        <div style="font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:-.01em;">Performance & Scalability</div>
-                    </div>
-                    <p style="color:#64748b;font-size:13px;line-height:1.75;">The new stack handles far more concurrent users without any slowdown. Expect noticeably faster key authentication and snappier performance across the board when we're back.</p>
-                </div>
-            </div>
 
         </div>
-    </div>
-</section>
+    </section>
 
-<div class="glow-line"></div>
-
-<!-- ===== FAQ ===== -->
-<section style="padding:80px 24px;">
-    <div style="max-width:780px;margin:0 auto;">
-        <div style="text-align:center;margin-bottom:48px;">
-            <div class="section-label">// FAQ</div>
-            <h2 style="font-size:clamp(30px,5vw,52px);font-weight:800;letter-spacing:-.04em;">COMMON <span style="color:#ef4444;">QUESTIONS</span></h2>
+    <footer class="py-12 text-center border-t border-white/5 opacity-60">
+        <div class="cursive text-2xl mb-4 text-blue-400">Engineered for Performance.</div>
+        <div class="mono text-[9px] tracking-[0.3em] uppercase">
+            Developed by PaxtanTools &bull; Managed by Legacity & 2min &bull; V5.1 FULL
         </div>
-        <div style="display:flex;flex-direction:column;gap:10px;">
+    </footer>
 
-            <details class="glass" style="border-radius:18px;">
-                <summary style="padding:24px 28px;font-size:14px;font-weight:700;list-style:none;display:flex;justify-content:space-between;align-items:center;cursor:pointer;text-transform:uppercase;letter-spacing:-.01em;">
-                    Can I still use Regify during maintenance?
-                    <i data-lucide="plus" class="faq-icon" style="width:18px;height:18px;transition:transform .3s;color:#ef4444;flex-shrink:0;"></i>
-                </summary>
-                <div style="padding:0 28px 24px;color:#64748b;font-size:13px;line-height:1.8;border-top:1px solid rgba(255,255,255,0.05);margin-top:0;padding-top:18px;">
-                    <span style="color:#fff;font-weight:700;">Yes — older models of Regify still work.</span> Only the latest version is affected by the API and database migration. If you have a previous version installed, you can continue using it without any interruption.
-                </div>
-            </details>
-
-            <details class="glass" style="border-radius:18px;">
-                <summary style="padding:24px 28px;font-size:14px;font-weight:700;list-style:none;display:flex;justify-content:space-between;align-items:center;cursor:pointer;text-transform:uppercase;letter-spacing:-.01em;">
-                    Is my existing license still valid?
-                    <i data-lucide="plus" class="faq-icon" style="width:18px;height:18px;transition:transform .3s;color:#ef4444;flex-shrink:0;"></i>
-                </summary>
-                <div style="padding:0 28px 24px;color:#64748b;font-size:13px;line-height:1.8;border-top:1px solid rgba(255,255,255,0.05);margin-top:0;padding-top:18px;">
-                    <span style="color:#fff;font-weight:700;">Absolutely.</span> Your license key and HWID binding are completely unaffected. All existing keys will carry over to the new system automatically — no action needed from you.
-                </div>
-            </details>
-
-            <details class="glass" style="border-radius:18px;">
-                <summary style="padding:24px 28px;font-size:14px;font-weight:700;list-style:none;display:flex;justify-content:space-between;align-items:center;cursor:pointer;text-transform:uppercase;letter-spacing:-.01em;">
-                    Can I still buy a license right now?
-                    <i data-lucide="plus" class="faq-icon" style="width:18px;height:18px;transition:transform .3s;color:#ef4444;flex-shrink:0;"></i>
-                </summary>
-                <div style="padding:0 28px 24px;color:#64748b;font-size:13px;line-height:1.8;border-top:1px solid rgba(255,255,255,0.05);margin-top:0;padding-top:18px;">
-                    <span style="color:#fff;font-weight:700;">Yes.</span> Purchases are still being handled manually through our <span style="color:#5865F2;font-weight:700;">Discord server</span>. Join at <span style="color:#f87171;">discord.gg/weMb3yDn</span>, open a ticket, and grab your $15 lifetime key.
-                </div>
-            </details>
-
-            <details class="glass" style="border-radius:18px;">
-                <summary style="padding:24px 28px;font-size:14px;font-weight:700;list-style:none;display:flex;justify-content:space-between;align-items:center;cursor:pointer;text-transform:uppercase;letter-spacing:-.01em;">
-                    How long will maintenance take?
-                    <i data-lucide="plus" class="faq-icon" style="width:18px;height:18px;transition:transform .3s;color:#ef4444;flex-shrink:0;"></i>
-                </summary>
-                <div style="padding:0 28px 24px;color:#64748b;font-size:13px;line-height:1.8;border-top:1px solid rgba(255,255,255,0.05);margin-top:0;padding-top:18px;">
-                    We're working as fast as possible. The exact ETA will be posted in our <span style="color:#5865F2;font-weight:700;">Discord server</span> as soon as it's confirmed. Enable notifications in the server so you don't miss the announcement.
-                </div>
-            </details>
-
-            <details class="glass" style="border-radius:18px;">
-                <summary style="padding:24px 28px;font-size:14px;font-weight:700;list-style:none;display:flex;justify-content:space-between;align-items:center;cursor:pointer;text-transform:uppercase;letter-spacing:-.01em;">
-                    Where do I get support right now?
-                    <i data-lucide="plus" class="faq-icon" style="width:18px;height:18px;transition:transform .3s;color:#ef4444;flex-shrink:0;"></i>
-                </summary>
-                <div style="padding:0 28px 24px;color:#64748b;font-size:13px;line-height:1.8;border-top:1px solid rgba(255,255,255,0.05);margin-top:0;padding-top:18px;">
-                    All support is being handled through our Discord server during maintenance. Join at <span style="color:#f87171;">discord.gg/weMb3yDn</span> and open a support ticket — our team will get back to you as soon as possible.
-                </div>
-            </details>
-
-            <details class="glass" style="border-radius:18px;">
-                <summary style="padding:24px 28px;font-size:14px;font-weight:700;list-style:none;display:flex;justify-content:space-between;align-items:center;cursor:pointer;text-transform:uppercase;letter-spacing:-.01em;">
-                    Will things improve after maintenance?
-                    <i data-lucide="plus" class="faq-icon" style="width:18px;height:18px;transition:transform .3s;color:#ef4444;flex-shrink:0;"></i>
-                </summary>
-                <div style="padding:0 28px 24px;color:#64748b;font-size:13px;line-height:1.8;border-top:1px solid rgba(255,255,255,0.05);margin-top:0;padding-top:18px;">
-                    Yes — significantly. The new API and database bring faster key authentication, improved uptime, better security, and a scalable foundation for future updates. This is a full infrastructure upgrade, not just a patch.
-                </div>
-            </details>
-
-        </div>
-    </div>
-</section>
-
-<div class="glow-line"></div>
-
-<!-- ===== DISCORD BOTTOM CTA ===== -->
-<section style="padding:80px 24px;text-align:center;">
-    <div style="max-width:620px;margin:0 auto;">
-        <div class="glass shine" style="border-radius:32px;padding:60px 52px;border-color:rgba(88,101,242,0.25);position:relative;overflow:hidden;">
-            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#5865F2,transparent);"></div>
-            <div class="scanline"></div>
-            <i data-lucide="message-square" style="width:48px;height:48px;color:#5865F2;display:block;margin:0 auto 22px;"></i>
-            <h3 style="font-size:30px;font-weight:800;letter-spacing:-.04em;margin-bottom:14px;">STAY IN THE LOOP</h3>
-            <p style="color:#64748b;font-size:14px;line-height:1.8;margin-bottom:34px;">
-                Join our Discord for real-time maintenance updates, to purchase your license, or to open a support ticket. Everything happens there while we're down.
-            </p>
-            <a href="https://discord.gg/weMb3yDn" target="_blank" class="btn-discord" style="font-size:14px;padding:18px 40px;">
-                <i data-lucide="message-square" style="width:20px;height:20px;"></i>
-                <span>discord.gg/weMb3yDn</span>
-                <i data-lucide="external-link" style="width:18px;height:18px;"></i>
-            </a>
-        </div>
-    </div>
-</section>
-
-<!-- Footer -->
-<footer style="padding:40px 24px;border-top:1px solid rgba(255,255,255,0.04);text-align:center;">
-    <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px;">
-        <div style="width:30px;height:30px;background:linear-gradient(135deg,#dc2626,#991b1b);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;box-shadow:0 0 14px rgba(220,38,38,0.3);">R</div>
-        <span style="font-size:14px;font-weight:800;letter-spacing:-.04em;">REGIFY PRO</span>
-    </div>
-    <p class="mono" style="font-size:9px;color:#334155;letter-spacing:.15em;text-transform:uppercase;line-height:2;">
-        Developed by PaxtanTools &nbsp;·&nbsp; Managed by Legacity & 2min &nbsp;·&nbsp; V5.1 — Maintenance Mode
-    </p>
-</footer>
-
-<script>
-    lucide.createIcons();
-    const glow = document.getElementById('cursor-glow');
-    document.addEventListener('mousemove', e => {
-        glow.style.left = e.clientX + 'px';
-        glow.style.top = e.clientY + 'px';
-    });
-    document.querySelectorAll('details').forEach(d => {
-        d.addEventListener('toggle', () => {
-            if (d.open) document.querySelectorAll('details').forEach(o => { if (o !== d) o.removeAttribute('open'); });
-        });
-    });
-</script>
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
 </html>
